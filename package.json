@@ -1,0 +1,20 @@
+{
+  "name": "path-fast",
+  "version": "1.0.0",
+  "description": "A CLI tool for managing project paths",
+  "main": "dist/index.js",
+  "bin": {
+    "path-fast": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "commander": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "typescript": "^5.0.0"
+  }
+}
