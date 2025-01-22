@@ -1,6 +1,6 @@
 import fs from 'fs';
 import inquirer from 'inquirer';
-import { filePath } from '../shered/jsonpath';
+import { filePath } from '../../utils/jsonpath';
 
 function loadPaths(): PathEntry[] {
   if (!fs.existsSync(filePath)) {
@@ -30,7 +30,6 @@ export async function editPath(input: string): Promise<void> {
   let editing = true;
 
   while (editing) {
-    // Menu interativo com as opções de edição
     const { action } = await inquirer.prompt([
       {
         type: 'list',

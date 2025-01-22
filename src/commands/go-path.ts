@@ -2,7 +2,7 @@ import fs from 'fs';
 import os from 'os'
 import path from 'path';
 import { exec, spawn } from 'child_process';
-import { filePath } from './shered/jsonpath';
+import { filePath } from '../utils/jsonpath';
 
 
 

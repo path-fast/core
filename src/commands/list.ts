@@ -1,5 +1,5 @@
 import path from 'path';
-import { readJsonFile } from './shered/read-file';
+import { readJsonFile } from '../utils/read-file';
 
 // Caminho do arquivo JSON
 const filePath = path.resolve(__dirname, '../../paths.json');
