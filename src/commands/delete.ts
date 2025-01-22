@@ -1,5 +1,5 @@
 import inquirer from "inquirer";
-import { readJsonFile } from "../../utils/read-file";
+import { readJsonFile } from "../utils/read-file";
 import { writeToJsonFile } from "./creat";
 
 export async function deletePath(command: string): Promise<void> {

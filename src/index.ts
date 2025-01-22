@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { addPath } from './commands/add-path/index';
+import { addPath } from './commands/index';
 import { goPath } from './commands/go-path';
 import { listPaths } from './commands/list';
-import { deletePath } from './commands/add-path/delete';
-import { editPath } from './commands/add-path/edit-path';
+import { deletePath } from './commands/delete';
+import { editPath } from './commands/edit-path';
 
 const program = new Command();
 

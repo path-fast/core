@@ -1,6 +1,6 @@
 import fs from 'fs';
 import inquirer from 'inquirer';
-import { filePath } from '../../utils/jsonpath';
+import { filePath } from '../utils/json-path';
 
 function loadPaths(): PathEntry[] {
   if (!fs.existsSync(filePath)) {

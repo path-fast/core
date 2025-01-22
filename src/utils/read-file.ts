@@ -1,5 +1,5 @@
 import fs from "fs";
-import { filePath } from "./jsonpath";
+import { filePath } from "./json-path";
 
 
 export function readJsonFile(): PathEntry[] {

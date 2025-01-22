@@ -1,8 +1,4 @@
-import path from 'path';
 import { readJsonFile } from '../utils/read-file';
-
-// Caminho do arquivo JSON
-const filePath = path.resolve(__dirname, '../../paths.json');
 
 export function listPaths(): void {
   const data = readJsonFile();

@@ -1,7 +1,7 @@
 import { writeToJsonFile } from "./creat";
-import { readJsonFile } from "../../utils/read-file";
-import { adjustPath, checkIfExistsInJson, validatePathExists } from "../../utils/validations";
-import { makeAdditional } from "../../utils/make-additinal";
+import { readJsonFile } from "../utils/read-file";
+import { adjustPath, checkIfExistsInJson, validatePathExists } from "../utils/validations";
+import { makeAdditional } from "../utils/make-additinal";
 
 export async function addPath(
   projectPath: string,
