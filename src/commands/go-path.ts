@@ -1,18 +1,14 @@
 import fs from 'fs';
+import os from 'os'
 import path from 'path';
-import { exec } from 'child_process';
+import { exec, spawn } from 'child_process';
+import { filePath } from './shered/jsonpath';
 
-const filePath = path.resolve(__dirname, '../../paths.json');
 
-interface PathEntry {
-  path: string;
-  command: string;
-  additional: string;
-}
 
-export function goPath(command: string) {
+export function goPath(command: string, option: Opitions ): void {
   if (!fs.existsSync(filePath)) {
-    console.error('Path file does not exist. Add a path first using add-path.');
+    console.error('Path file does not exist. Add a path first using path-fast add <project-path> <your-command>');
     return;
   }
 
@@ -26,12 +22,48 @@ export function goPath(command: string) {
 
   const { path: targetPath } = entry;
 
-  process.chdir(targetPath);
-  exec('code .', (err) => {
+  process.chdir(changeToHomeAndTarget(targetPath));
+
+  exec('code .', { cwd: targetPath }, (err) => {
     if (err) {
       console.error('Error opening VS Code:', err.message);
     } else {
       console.log(`Opened ${targetPath} in VS Code`);
     }
   });
+  if (!option.Nc) {
+    entry.additional.forEach((additional) => {
+      console.log(`Executing command: ${additional}`);
+      
+      const additionalProcess = spawn(additional, { cwd: targetPath, shell: true });
+
+      additionalProcess.stdout.on('data', (data) => {
+        console.log(`[Output]: ${data}`);
+      });
+
+      additionalProcess.stderr.on('data', (data) => {
+        console.info(`[Info]: ${data}`);
+      });
+
+      additionalProcess.on('close', (code) => {
+        if (code === 0) {
+          console.log(`The command "${additional}" executed successfully.`);
+        } else {
+          console.error(`The command "${additional}" exited with code: ${code}`);
+        }
+      });
+    });
+  }else{
+    console.log('Skipped the additional commands')
+  }
+}
+
+function changeToHomeAndTarget (targetPath: string) : string{
+
+  const homeDir = os.homedir();
+  process.chdir(homeDir);
+
+  const absoluteTargetPath = path.isAbsolute(targetPath) ? targetPath : path.resolve(homeDir, targetPath);
+
+  return absoluteTargetPath
 }

@@ -4,14 +4,16 @@
   "description": "A CLI tool for managing project paths",
   "main": "dist/index.js",
   "bin": {
-    "path-fast": "dist/index.js"
+    "pf": "dist/index.js"
   },
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js"
+    "dev": "node dist/index.js"
   },
   "dependencies": {
-    "commander": "^10.0.0"
+    "chalk": "^5.4.1",
+    "commander": "^10.0.0",
+    "inquirer": "^12.3.2"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",
