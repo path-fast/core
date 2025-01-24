@@ -7,17 +7,12 @@ interface PathEntry {
 }
 
 interface Opitions {
+  nc?: boolean;
   Nc?: boolean;
 }
 
+type EnumTypes = "select" | "input" | "confirm" | "list" | "confirm";
 
-type EnumTypes = "select" | "input" | "confirm" | "list" | "confirm"
+type PronptType = UnnamedDistinctQuestion<Answers & object> & { name: string };
 
-type PronptType = UnnamedDistinctQuestion<Answers & object> & {name: string;}
-
-export{
-  PathEntry,
-  EnumTypes,
-  PronptType,
-  Opitions,
-}
+export { PathEntry, EnumTypes, PronptType, Opitions };

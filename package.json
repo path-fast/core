@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "node dist/index.js"
+    "dev": "tsc --watch",
+    "dev:run": "node dist/index.js"
   },
   "repository": {
     "type": "git",

@@ -5,7 +5,6 @@ import { readJsonFile } from '../utils/write-read-json';
 import { Opitions } from '../dto';
 
 
-
 export function goPath(command: string, option: Opitions ): void {
 
   const data = readJsonFile()
@@ -27,7 +26,7 @@ export function goPath(command: string, option: Opitions ): void {
       console.log(`Opened ${targetPath} in VS Code`);
     }
   });
-  if (!option.Nc) {
+  if (!option.nc) {
     execAdditional(entry.additional, targetPath)
   }else{
     console.log('Skipped the additional commands')
