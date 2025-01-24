@@ -1,7 +1,7 @@
 {
   "name": "path-fast",
   "version": "1.0.0",
-  "description": "A CLI tool for managing project",
+  "description": "A CLI tool designed to streamline access to projects.",
   "main": "dist/index.js",
   "bin": {
     "pf": "dist/index.js"
@@ -10,6 +10,24 @@
     "build": "tsc",
     "dev": "node dist/index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eduardonicola/path-fast.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eduardonicola/path-fast/issues"
+  },
+  "author": "Eduardo Nicola possaniduardo@gmail.com",
+  "license": "MIT",
+  "homepage": "https://github.com/eduardonicola/path-fast#readme",
+  "keywords": [
+    "cli",
+    "path",
+    "shortcut",
+    "project-management",
+    "automation"
+  ],
+
   "dependencies": {
     "commander": "^13.1.0",
     "inquirer": "^12.3.2"
