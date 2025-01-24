@@ -1,4 +1,5 @@
-# Path-Fast 🚀
+# Path-Fast 🚀 
+#### Translated: [pt-BR](/docs/README-ptBR.md)
 
 **Path-Fast** is a powerful CLI tool 🛠️ designed to streamline your workflow by allowing you to manage and navigate project paths 📂 with custom commands 🧩 and shortcuts 🏃‍♂️. With Path-Fast, you can easily save paths, create aliases, and execute additional commands ⚡ with a single shortcut.
 
@@ -142,7 +143,7 @@ This project is licensed under the MIT License.
 
 ## Contributing 🤝
 
-Contributions are welcome! 🎉 Feel free to open an issue 🐛 or submit a pull request 📬 to the [GitHub repository](https://github.com/seu-usuario/path-fast).
+Contributions are welcome! 🎉 Feel free to open an issue 🐛 or submit a pull request 📬 to the [GitHub repository](https://github.com/eduardonicola/path-fast).
 
 ---
 
@@ -153,3 +154,4 @@ Thanks to the developers and maintainers of the following libraries:
 
 - [Inquirer](https://www.npmjs.com/package/inquirer)💬
 - [commander](https://www.npmjs.com/package/commander)🛠️
+
