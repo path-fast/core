@@ -1,7 +1,7 @@
 {
   "name": "path-fast",
   "version": "1.0.0",
-  "description": "A CLI tool for managing project paths",
+  "description": "A CLI tool for managing project",
   "main": "dist/index.js",
   "bin": {
     "pf": "dist/index.js"
