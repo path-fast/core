@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { addPath } from './commands/index';
+import { addPath } from './commands/add-path';
 import { goPath } from './commands/go-path';
-import { listPaths } from './commands/list';
+import { listPaths } from './commands/list-paths';
 import { deletePath } from './commands/delete';
 import { editPath } from './commands/edit-path';
 
@@ -32,7 +32,7 @@ program
 
 program
   .command('edit <command>')
-  .description('Edit your shortcut' )
+  .description('Edit your shortcut ' )
   .action(editPath);
 
 program.parse(process.argv);

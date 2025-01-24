@@ -1,26 +1,15 @@
-import fs from 'fs';
 import inquirer from 'inquirer';
-import { filePath } from '../utils/json-path';
+import { readJsonFile, writeToJsonFile } from '../utils/write-read-json';
+import { makePrompt } from '../utils/make-prompt';
+import { PathEntry, PronptType } from '../dto';
 
-function loadPaths(): PathEntry[] {
-  if (!fs.existsSync(filePath)) {
-    return [];
-  }
-  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-}
+const regex = / /
 
-function savePaths(data: PathEntry[]): void {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
-}
 
 export async function editPath(input: string): Promise<void> {
-  const data = loadPaths();
+  const data = readJsonFile();
 
-  // Identifica o item com base no índice ou comando
-  const target =
-    isNaN(Number(input)) 
-      ? data.find((entry) => entry.command === input) 
-      : data[Number(input)];
+  const target = catchTarget(input, data)
 
   if (!target) {
     console.error(`Error: No entry found for "${input}".`);
@@ -28,59 +17,34 @@ export async function editPath(input: string): Promise<void> {
   }
 
   let editing = true;
+  const promptEdit = makePrompt('list','action', 'What would you like to edit?' )
+  promptEdit.choices = ['Path', 'Command', 'Additional', 'Save & Exit', 'Cancel'] 
 
   while (editing) {
-    const { action } = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'action',
-        message: 'What would you like to edit?',
-        choices: ['Path', 'Command', 'Additional', 'Save & Exit', 'Cancel'],
-      },
-    ]);
+    const { action } = await inquirer.prompt([promptEdit]);
 
     switch (action) {
       case 'Path': {
-        const { newPath } = await inquirer.prompt([
-          {
-            type: 'input',
-            name: 'newPath',
-            message: `Current Path: ${target.path}\nEnter new path (leave blank to keep current):`,
-          },
-        ]);
-        if (newPath) target.path = newPath;
+        const promptPath = makePrompt('input','newPath',`Current Path: ${target.path}\nEnter new path (Type "exit" or leave blank to exit without editing.):`)   
+        await execEditCommun('path', promptPath ,target)     
         break;
       }
 
       case 'Command': {
-        const { newCommand } = await inquirer.prompt([
-          {
-            type: 'input',
-            name: 'newCommand',
-            message: `Current Command: ${target.command}\nEnter new command (leave blank to keep current):`,
-          },
-        ]);
-        if (newCommand) target.command = newCommand;
+        const promptCommand = makePrompt('input','newCommand', `Current Command: ${target.command}\nEnter new command (Type "exit" or leave blank to exit without editing.):` )
+        await execEditCommun('command', promptCommand, target)
         break;
       }
 
       case 'Additional': {
         console.log(`Current Additional Commands: ${target.additional.join(', ')}`);
-        const { newAdditional } = await inquirer.prompt([
-          {
-            type: 'input',
-            name: 'newAdditional',
-            message: 'Enter additional commands (comma-separated, leave blank to keep current):',
-          },
-        ]);
-        if (newAdditional) {
-          target.additional = newAdditional.split(',').map((cmd: string) => cmd.trim());
-        }
+        const promptAdditional = makePrompt('input', 'newAdditional','Enter additional commands (comma-separated, type "exit" or leave blank to exit without editing.): ')
+        await execEditAdditional(promptAdditional, target)
         break;
       }
 
       case 'Save & Exit': {
-        savePaths(data);
+        writeToJsonFile(data);
         console.log('Changes saved successfully!');
         editing = false;
         break;
@@ -95,3 +59,33 @@ export async function editPath(input: string): Promise<void> {
   }
 }
 
+function catchTarget(input: string, data: PathEntry[]) {
+  return isNaN(Number(input))
+    ? data.find((entry) => entry.command === input)
+    : data[Number(input)];
+}
+
+async function execEditCommun(item: 'path'| 'command', pronpt:  PronptType, target:PathEntry ){
+
+  const { newPath } = await inquirer.prompt([pronpt]);
+
+  if( typeof newPath == 'string' ){
+    const pathAfter = newPath.replace(regex, '')
+    if(pathAfter === '' || pathAfter === 'exit' ) return
+
+    if (newPath) target[item] = newPath;
+  }
+
+
+}
+async function execEditAdditional(pronpt:  PronptType, target:PathEntry ) {
+  
+  const { newAdditional } = await inquirer.prompt([pronpt]);
+        
+  if ( typeof newAdditional == 'string' && newAdditional) {
+    const additionalAfter = newAdditional.replace(regex, '')
+    if(additionalAfter === '' || additionalAfter === 'exit' ) return
+
+    target.additional = newAdditional.split(',').map((cmd: string) => cmd.trim());
+  }
+}

@@ -1,4 +1,5 @@
 import  fs  from "fs";
+import { PathEntry } from "../dto";
 
 export function validatePathExists(projectPath: string): boolean {
   if (!fs.existsSync(projectPath)) {

@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
-import { readJsonFile } from "../utils/read-file";
-import { writeToJsonFile } from "./creat";
+import { readJsonFile, writeToJsonFile } from "../utils/write-read-json";
+import { makePrompt } from "../utils/make-prompt";
 
 export async function deletePath(command: string): Promise<void> {
   const data = readJsonFile();
@@ -12,21 +12,14 @@ export async function deletePath(command: string): Promise<void> {
     return;
   }
 
-  // Pergunta de confirmação antes de deletar
-  const confirmation = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'confirmDelete',
-      message: `Are you sure you want to delete the command "${command}"?`,
-      default: false,
-    },
-  ]);
+
+  const promptConfirmation = makePrompt('confirm', 'confirmDelete', `Are you sure you want to delete the command "${command}"?`)
+  promptConfirmation.default = false
+  const confirmation = await inquirer.prompt([promptConfirmation]);
 
   if (confirmation.confirmDelete) {
-    // Remove o item do array
     data.splice(entryIndex, 1);
 
-    // Escreve novamente no arquivo JSON
     writeToJsonFile(data);
     console.log(`Successfully deleted the command "${command}".`);
   } else {
