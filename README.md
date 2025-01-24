@@ -55,15 +55,15 @@ When adding a path, you will be prompted to add additional commands 💬 that wi
 Navigate to a saved path and open it in VS Code:
 
 ```bash
-pf go <command> [--no-commands | -nc]
+pf go <command> [-nc]
 ```
 
 - `command` 🧩: The alias of the path you want to navigate to.
-- `--no-commands` or `-nc` 🚫: Skip executing additional commands associated with the path.
+- `-nc` 🚫: Skip executing additional commands associated with the path.
 - Example:
   ```bash
   pf go myproj
-  pf go myproj --no-commands
+  pf go myproj -nc
   ```
 
 ### List All Saved Paths 📜

@@ -58,15 +58,15 @@ Ao adicionar um caminho, você será solicitado a adicionar comandos adicionais 
 Navegue até um caminho salvo e abra-o no VS Code:
 
 ```bash
-pf go <comando> [--no-commands | -nc]
+pf go <comando> [-nc]
 ```
 
 - `comando` 🧩: O alias do caminho para o qual você deseja navegar.
-- `--no-commands` ou `-nc` 🚫: Pular a execução de comandos adicionais associados ao caminho.
+- `-nc` 🚫: Pular a execução de comandos adicionais associados ao caminho.
 - Exemplo:
   ```bash
   pf go meuproj
-  pf go meuproj --no-commands
+  pf go meuproj -nc
   ```
 
 ### Listar Todos os Caminhos Salvos 📜
