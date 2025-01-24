@@ -146,7 +146,7 @@ Este projeto é licenciado sob a Licença MIT.
 
 ## Contribuindo 🤝
 
-Contribuições são bem-vindas! 🎉 Fique à vontade para abrir um problema 🐛 ou enviar um pull request 📬 para o [repositório no GitHub](https://github.com/seu-usuario/path-fast).
+Contribuições são bem-vindas! 🎉 Fique à vontade para abrir um problema 🐛 ou enviar um pull request 📬 para o [repositório no GitHub](https://github.com/eduardonicola/path-fast).
 
 ---
 
