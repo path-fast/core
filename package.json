@@ -9,18 +9,18 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "dev:run": "node dist/index.js"
+    "dev:pf": "node dist/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/eduardonicola/path-fast.git"
+    "url": "https://github.com/eduardo-nicola/path-fast.git"
   },
   "bugs": {
-    "url": "https://github.com/eduardonicola/path-fast/issues"
+    "url": "https://github.com/eduardo-nicola/path-fast/issues"
   },
   "author": "Eduardo Nicola possaniduardo@gmail.com",
   "license": "MIT",
-  "homepage": "https://github.com/eduardonicola/path-fast#readme",
+  "homepage": "https://github.com/eduardo-nicola/path-fast#readme",
   "keywords": [
     "cli",
     "path",
