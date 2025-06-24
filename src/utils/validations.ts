@@ -25,13 +25,3 @@ export function checkIfExistsInJson(
   }
   return false;
 }
-
-export function adjustPath(projectPath: string): string {
-  if (projectPath.startsWith("/")) {
-    console.warn(
-      'Relative paths should not start with "/". Adjusting automatically.'
-    );
-    projectPath = projectPath.slice(1);
-  }
-  return projectPath;
-}

@@ -1,5 +1,5 @@
 import { readJsonFile, writeToJsonFile } from "../utils/write-read-json";
-import { adjustPath, checkIfExistsInJson, validatePathExists } from "../utils/validations";
+import { checkIfExistsInJson, validatePathExists } from "../utils/validations";
 import inquirer from "inquirer";
 import { makePrompt } from "../utils/make-prompt";
 
@@ -7,9 +7,8 @@ export async function addPath(
   projectPath: string,
   command: string,
 ): Promise<void> {
-  const adjustedPath = adjustPath(projectPath);
 
-  const absolutePath = adjustedPath === "." ? process.cwd() : adjustedPath;
+  const absolutePath = projectPath === "." ? process.cwd() : projectPath;
 
   if (!validatePathExists(absolutePath)) {
     return;
