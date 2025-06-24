@@ -20,18 +20,20 @@ export async function editPath(input: string): Promise<void> {
   const promptEdit = makePrompt('list','action', 'What would you like to edit?' )
   promptEdit.choices = ['Path', 'Command', 'Additional', 'Save & Exit', 'Cancel'] 
 
+  const makeText = (name : string, target : string) => `Current ${name}: ${target}\nEnter new path (Type "exit" or leave blank to exit without editing.):`
+
   while (editing) {
     const { action } = await inquirer.prompt([promptEdit]);
 
     switch (action) {
       case 'Path': {
-        const promptPath = makePrompt('input','newPath',`Current Path: ${target.path}\nEnter new path (Type "exit" or leave blank to exit without editing.):`)   
+        const promptPath = makePrompt('input','newPath', makeText('Path', target.path) )  
         await execEditCommun('path', promptPath ,target)     
         break;
       }
 
       case 'Command': {
-        const promptCommand = makePrompt('input','newCommand', `Current Command: ${target.command}\nEnter new command (Type "exit" or leave blank to exit without editing.):` )
+        const promptCommand = makePrompt('input','newCommand', makeText('Command', target.command) )
         await execEditCommun('command', promptCommand, target)
         break;
       }
