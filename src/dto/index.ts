@@ -11,7 +11,7 @@ interface Opitions {
   Nc?: boolean;
 }
 
-type EnumTypes = "select" | "input" | "confirm" | "list" | "confirm";
+type EnumTypes = "select" | "input" | "confirm" | "list"; 
 
 type PronptType = UnnamedDistinctQuestion<Answers & object> & { name: string };
 
