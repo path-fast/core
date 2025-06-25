@@ -27,20 +27,20 @@ export async function editPath(input: string): Promise<void> {
 
     switch (action) {
       case 'Path': {
-        const promptPath = makePrompt('input','newPath', makeText('Path', target.path) )  
+        const promptPath = makePrompt('input','edited', makeText('Path', target.path) )  
         await execEditCommun('path', promptPath ,target)     
         break;
       }
 
       case 'Command': {
-        const promptCommand = makePrompt('input','newCommand', makeText('Command', target.command) )
+        const promptCommand = makePrompt('input','edited', makeText('Command', target.command) )
         await execEditCommun('command', promptCommand, target)
         break;
       }
 
       case 'Additional': {
         console.log(`Current Additional Commands: ${target.additional.join(', ')}`);
-        const promptAdditional = makePrompt('input', 'newAdditional','Enter additional commands (comma-separated, type "exit" or leave blank to exit without editing.): ')
+        const promptAdditional = makePrompt('input', 'newAdditional','Enter additional commands (comma-separated, type "exit" or leave blank to exit without editing, or type "clear" to clear): ')
         await execEditAdditional(promptAdditional, target)
         break;
       }
@@ -67,15 +67,15 @@ function catchTarget(input: string, data: PathEntry[]) {
     : data[Number(input)];
 }
 
-async function execEditCommun(item: 'path'| 'command', pronpt:  PronptType, target:PathEntry ){
+async function execEditCommun(item: 'path' | 'command', pronpt:  PronptType, target:PathEntry ){
 
-  const { newPath } = await inquirer.prompt([pronpt]);
+  const { edited } = await inquirer.prompt([pronpt]);
 
-  if( typeof newPath == 'string' ){
-    const pathAfter = newPath.replace(regex, '')
+  if( typeof edited == 'string' ){
+    const pathAfter = edited.replace(regex, '')
     if(pathAfter === '' || pathAfter === 'exit' ) return
-
-    if (newPath) target[item] = newPath;
+    
+    if (edited) target[item] = edited;
   }
 
 
@@ -87,6 +87,11 @@ async function execEditAdditional(pronpt:  PronptType, target:PathEntry ) {
   if ( typeof newAdditional == 'string' && newAdditional) {
     const additionalAfter = newAdditional.replace(regex, '')
     if(additionalAfter === '' || additionalAfter === 'exit' ) return
+
+    if (newAdditional === 'clear') {
+      target.additional = [];
+      return;
+    }
 
     target.additional = newAdditional.split(',').map((cmd: string) => cmd.trim());
   }
