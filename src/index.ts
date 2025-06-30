@@ -38,6 +38,6 @@ program
 program
   .command('edit <command>')
   .description('Edit your shortcut' )
-  .action(editPath);
+  .action(editPath); // Check
 
 program.parse(process.argv);

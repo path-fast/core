@@ -19,8 +19,7 @@ export function validatePathExists(projectPath: string) {
     return projectPathWithHome
   }
 
-  throw new Error(`Error: The path "${projectPath}" does not exist.`);
-  
+  throw new Error(`The path "${projectPath}" does not exist.`);
 
 }
 
@@ -38,5 +37,5 @@ export function checkIfExistsInJson(
     );
     return true;
   }
-  return false;
+  return false; 
 }
