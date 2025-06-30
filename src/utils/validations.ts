@@ -1,12 +1,27 @@
-import  fs  from "fs";
+import  { existsSync }  from "fs";
 import { PathEntry } from "../dto";
+import { homedir } from "os";
+const userHome =  homedir()
 
-export function validatePathExists(projectPath: string): boolean {
-  if (!fs.existsSync(projectPath)) {
-    console.error(`Error: The path "${projectPath}" does not exist.`);
-    return false;
+export function validatePathExists(projectPath: string) {
+
+  if(!projectPath.startsWith('/')){
+    projectPath = `/${projectPath}`
   }
-  return true;
+
+  const startWithHome = RegExp(userHome).exec(projectPath)
+
+  if(startWithHome && existsSync(projectPath)){
+    return projectPath
+  }
+  const projectPathWithHome = `${userHome}${projectPath}`
+  if(existsSync(projectPathWithHome)){
+    return projectPathWithHome
+  }
+
+  throw new Error(`Error: The path "${projectPath}" does not exist.`);
+  
+
 }
 
 export function checkIfExistsInJson(

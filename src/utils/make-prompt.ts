@@ -1,7 +1,6 @@
-import { Answers, UnnamedDistinctQuestion } from "inquirer/dist/commonjs/types";
-import { EnumTypes } from "../dto";
+import { EnumTypes, PronptType } from "../dto";
 
-export function makePrompt (type:EnumTypes, name: string, message: string): UnnamedDistinctQuestion<Answers & object> & { name: string; } {
+export function makePrompt (type:EnumTypes, name: string, message: string): PronptType  {
 
   const prompt = {
     type,

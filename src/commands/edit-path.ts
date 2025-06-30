@@ -1,7 +1,7 @@
-import inquirer from 'inquirer';
 import { readJsonFile, writeToJsonFile } from '../utils/write-read-json';
 import { makePrompt } from '../utils/make-prompt';
 import { PathEntry, PronptType } from '../dto';
+import { spawnPrompt } from '../utils/spown-pronpt';
 
 const regex = / /
 
@@ -23,7 +23,7 @@ export async function editPath(input: string): Promise<void> {
   const makeText = (name : string, target : string) => `Current ${name}: ${target}\nEnter new path (Type "exit" or leave blank to exit without editing.):`
 
   while (editing) {
-    const { action } = await inquirer.prompt([promptEdit]);
+    const { action } = await spawnPrompt(promptEdit);
 
     switch (action) {
       case 'Path': {
@@ -69,7 +69,7 @@ function catchTarget(input: string, data: PathEntry[]) {
 
 async function execEditCommun(item: 'path' | 'command', pronpt:  PronptType, target:PathEntry ){
 
-  const { edited } = await inquirer.prompt([pronpt]);
+  const { edited } = await spawnPrompt(pronpt);
 
   if( typeof edited == 'string' ){
     const pathAfter = edited.replace(regex, '')
@@ -82,7 +82,7 @@ async function execEditCommun(item: 'path' | 'command', pronpt:  PronptType, tar
 }
 async function execEditAdditional(pronpt:  PronptType, target:PathEntry ) {
   
-  const { newAdditional } = await inquirer.prompt([pronpt]);
+  const { newAdditional } = await spawnPrompt(pronpt);
         
   if ( typeof newAdditional == 'string' && newAdditional) {
     const additionalAfter = newAdditional.replace(regex, '')
