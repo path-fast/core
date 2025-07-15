@@ -1,14 +1,12 @@
-name: Publish to NPM
-
+name: npm-publish
 on:
   push:
     branches:
-      - master
-
+      - master # Change this to your default branch
 jobs:
-  publish:
+  npm-publish:
+    name: npm-publish
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4

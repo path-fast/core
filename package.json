@@ -13,6 +13,7 @@
     "README.md",
     "docs"
   ],
+
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
