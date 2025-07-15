@@ -28,6 +28,7 @@ jobs:
       - name: Prepare dist folder
         run: |
           cp README.md dist/
+          cp .npmrc dist/
           cp package.json dist/
           cp -r docs dist/
 
