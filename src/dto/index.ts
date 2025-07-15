@@ -1,5 +1,3 @@
-import { Answers, UnnamedDistinctQuestion } from "inquirer/dist/commonjs/types";
-
 interface PathEntry {
   path: string;
   command: string;
@@ -7,12 +5,17 @@ interface PathEntry {
 }
 
 interface Opitions {
-  nc?: boolean;
-  Nc?: boolean;
+  code?: boolean;
+  extra?: boolean;
 }
 
 type EnumTypes = "select" | "input" | "confirm" | "list"; 
 
-type PronptType = UnnamedDistinctQuestion<Answers & object> & { name: string };
+interface PronptType {
+  type: EnumTypes;
+  name: string;
+  message: string;
+  [x : string]: string | boolean | string[] | []
+}
 
 export { PathEntry, EnumTypes, PronptType, Opitions };

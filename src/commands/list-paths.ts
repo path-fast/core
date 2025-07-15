@@ -1,4 +1,4 @@
-import { readJsonFile } from '../utils/write-read-json';
+import { readJsonFile } from '../utils/write-read-json.js';
 
 export function listPaths(): void {
   const data = readJsonFile();

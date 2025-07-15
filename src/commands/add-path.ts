@@ -1,8 +1,8 @@
 import { cwd } from "process";
-import { readJsonFile, writeToJsonFile } from "../utils/write-read-json";
-import { checkIfExistsInJson, validatePathExists } from "../utils/validations";
-import { makePrompt } from "../utils/make-prompt";
-import { spawnPrompt } from "../utils/spown-pronpt";
+import { readJsonFile, writeToJsonFile } from "../utils/write-read-json.js";
+import { checkIfExistsInJson, validatePathExists } from "../utils/validations.js";
+import { makePrompt } from "../utils/make-prompt.js";
+import { spawnPrompt } from "../utils/spown-pronpt.js";
 
 export async function addPath(
   projectPath: string,

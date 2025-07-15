@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { addPath } from './commands/add-path';
-import { goPath } from './commands/go-path';
-import { listPaths } from './commands/list-paths';
-import { deletePath } from './commands/delete';
-import { editPath } from './commands/edit-path';
+import { addPath } from './commands/add-path.js';
+import { goPath } from './commands/go-path.js';
+import { listPaths } from './commands/list-paths.js';
+import { deletePath } from './commands/delete.js';
+import { editPath } from './commands/edit-path.js';
 
 const program = new Command();
 
@@ -21,7 +21,8 @@ program
 
 program
   .command('go <command>')
-  .option('--nc', 'Do not execute additional commands')
+  .option('-c , --code', 'Do not execute "code ." command')
+  .option('-e , --extra', 'Do not execute additional commands')
   .description('Navigate to the project path, open it in VS Code, and run your custom commands.')
   .action(goPath);
 

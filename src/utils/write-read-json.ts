@@ -1,6 +1,6 @@
 import fs from "fs";
-import { filePath } from "./json-path";
-import { PathEntry } from "../dto";
+import { filePath } from "./json-path.js";
+import { PathEntry } from "../dto/index.js";
 
 
 export function readJsonFile(): PathEntry[] {

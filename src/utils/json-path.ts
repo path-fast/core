@@ -1,3 +1,6 @@
-import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from "path";
 
-export const filePath = path.resolve(__dirname, "../paths.json");
+const fileName = fileURLToPath(import.meta.url);
+const dirName = dirname(fileName);
+export const filePath = resolve(dirName, "../paths.json");

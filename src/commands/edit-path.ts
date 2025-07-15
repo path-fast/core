@@ -1,8 +1,8 @@
-import { readJsonFile, writeToJsonFile } from '../utils/write-read-json';
-import { makePrompt } from '../utils/make-prompt';
-import { PathEntry, PronptType } from '../dto';
-import { spawnPrompt } from '../utils/spown-pronpt';
-import { validatePathExists } from '../utils/validations';
+import { readJsonFile, writeToJsonFile } from '../utils/write-read-json.js';
+import { makePrompt } from '../utils/make-prompt.js';
+import { PathEntry, PronptType } from '../dto/index.js';
+import { spawnPrompt } from '../utils/spown-pronpt.js';
+import { validatePathExists } from '../utils/validations.js';
 
 const regex = / /
 

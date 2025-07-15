@@ -1,5 +1,5 @@
 import  { existsSync }  from "fs";
-import { PathEntry } from "../dto";
+import { PathEntry } from "../dto/index.js";
 import { homedir } from "os";
 const userHome =  homedir()
 

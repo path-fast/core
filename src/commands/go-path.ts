@@ -1,8 +1,9 @@
 import os from 'os'
 import path from 'path';
 import { exec, spawn } from 'child_process';
-import { readJsonFile } from '../utils/write-read-json';
-import { Opitions } from '../dto';
+import { readJsonFile } from '../utils/write-read-json.js';
+import { Opitions } from '../dto/index.js';
+import { log } from 'console';
 
 
 export function goPath(command: string, option: Opitions ): void {
@@ -16,17 +17,20 @@ export function goPath(command: string, option: Opitions ): void {
   }
 
   const { path: targetPath } = entry;
-
   process.chdir(changeToHomeAndTarget(targetPath));
+  if(!option.code){
+    exec('code .', { cwd: targetPath }, (err) => {
+      if (err) {
+        console.error('Error opening VS Code:', err.message);
+      } else {
+        console.log(`Opened ${targetPath} in VS Code`);
+      }
+    });
+  }else{
+    console.log('Skipped the "code ." command')
+  }
 
-  exec('code .', { cwd: targetPath }, (err) => {
-    if (err) {
-      console.error('Error opening VS Code:', err.message);
-    } else {
-      console.log(`Opened ${targetPath} in VS Code`);
-    }
-  });
-  if (!option.nc) {
+  if (!option.extra) {
     execAdditional(entry.additional, targetPath)
   }else{
     console.log('Skipped the additional commands')
