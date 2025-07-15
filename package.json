@@ -1,6 +1,6 @@
 {
   "name": "path-fast",
-  "version": "1.0.3",
+  "version": "1.0.7",
   "description": "A CLI tool designed to streamline access to projects.",
   "main": "dist/index.js",
   "type": "module",
