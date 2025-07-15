@@ -3,7 +3,6 @@ import path from 'path';
 import { exec, spawn } from 'child_process';
 import { readJsonFile } from '../utils/write-read-json.js';
 import { Opitions } from '../dto/index.js';
-import { log } from 'console';
 
 
 export function goPath(command: string, option: Opitions ): void {
