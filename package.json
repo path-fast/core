@@ -1,6 +1,6 @@
 {
   "name": "path-fast",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A CLI tool designed to streamline access to projects.",
   "main": "dist/index.js",
   "type": "module",
@@ -13,7 +13,6 @@
     "README.md",
     "docs"
   ],
-
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
@@ -36,7 +35,6 @@
     "project-management",
     "automation"
   ],
-
   "dependencies": {
     "commander": "^13.1.0",
     "inquirer": "^12.3.2"
