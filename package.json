@@ -4,6 +4,7 @@
   "description": "A CLI tool designed to streamline access to projects.",
   "main": "dist/index.js",
   "type": "module",
+  "private": "false",
   "bin": {
     "pf": "dist/index.js"
   },
