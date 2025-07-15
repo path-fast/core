@@ -7,6 +7,11 @@
   "bin": {
     "pf": "dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "docs"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
