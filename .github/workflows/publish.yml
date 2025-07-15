@@ -33,6 +33,9 @@ jobs:
           cp -r docs dist/
 
       - name: Publish to NPM
-        run: cd dist && npm publish
+        run: |
+          cd dist 
+          npm whoami
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
