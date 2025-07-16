@@ -1,14 +1,16 @@
-name: npm-publish
+name: Publish to NPM
+
 on:
   push:
     branches:
-      - master # Change this to your default branch
+      - master
+
 jobs:
-  npm-publish:
-    name: npm-publish
+  publish:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -24,20 +26,20 @@ jobs:
         run: npm run build
 
       - name: Check if version already exists on NPM
-        id: version-check
+        id: check-version
         run: |
           PKG_NAME=$(node -p "require('./package.json').name")
           PKG_VERSION=$(node -p "require('./package.json').version")
-          if npm view "$PKG_NAME@$PKG_VERSION" version >/dev/null 2>&1; then
-            echo "Version $PKG_VERSION already exists on NPM."
+          if npm view "$PKG_NAME@$PKG_VERSION" version > /dev/null 2>&1; then
+            echo "Version $PKG_VERSION already exists."
             echo "exists=true" >> $GITHUB_OUTPUT
           else
-            echo "Version $PKG_VERSION does not exist on NPM."
+            echo "Version $PKG_VERSION does not exist."
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Publish to NPM
-        if: steps.version-check.outputs.exists == 'false'
+        if: steps.check-version.outputs.exists == 'false'
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
