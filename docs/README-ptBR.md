@@ -1,26 +1,26 @@
-Aqui está o seu README traduzido para o português:
+# Path-Fast 🚀 
+#### Traduzido: [en](/docs/README.md)
 
----
+![npm version](https://img.shields.io/npm/v/path-fast)
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
-# Path-Fast 🚀
-
-**Path-Fast** é uma poderosa ferramenta CLI 🛠️ projetada para otimizar seu fluxo de trabalho, permitindo que você gerencie e navegue pelos caminhos de projetos 📂 com comandos personalizados 🧩 e atalhos 🏃‍♂️. Com o Path-Fast, você pode facilmente salvar caminhos, criar aliases e executar comandos adicionais ⚡ com um único atalho.
+**Path-Fast** é uma ferramenta CLI 🛠️ que simplifica a navegação em projetos permitindo que você salve e gerencie caminhos usados frequentemente com aliases e atalhos personalizados. Seja para abrir um projeto rapidamente no VS Code ou executar scripts de configuração automaticamente, o Path-Fast torna tudo rápido e fácil.
 
 ---
 
 ## Funcionalidades ✨
 
-- **Salvar caminhos com aliases** 📌: Armazene rapidamente caminhos e associe-os a um comando personalizado.
-- **Navegar e abrir projetos** 📂➡️💻: Use atalhos para navegar até os caminhos e abri-los no VS Code.
-- **Suporte a comandos adicionais** 🎛️: Execute comandos predefinidos ao navegar até um caminho.
-- **Edição interativa** ✍️: Modifique caminhos, comandos ou parâmetros adicionais por meio de uma interface interativa simples.
+- **Salvar caminhos com aliases** 📌: Armazene rapidamente caminhos e associe-os a um alias personalizado.
+- **Navegar e abrir projetos** 📂➡️💻: Use atalhos para navegar até caminhos e abri-los no VS Code.
+- **Suporte para comandos adicionais** 🎛️: Execute comandos predefinidos ao navegar para um caminho.
+- **Edição interativa** ✍️: Modifique caminhos, comandos ou parâmetros adicionais por meio de uma interface simples e interativa.
 - **Instalação global** 🌐: Disponível de qualquer lugar no seu terminal.
 
 ---
 
 ## Instalação 🔧
 
-Instale **Path-Fast** globalmente usando npm:
+Instale o **Path-Fast** globalmente usando npm:
 
 ```bash
 npm install -g path-fast
@@ -35,43 +35,54 @@ npm install -g path-fast
 Salve o caminho de um projeto com um alias personalizado:
 
 ```bash
-pf add <caminho> <comando>
+pf add <caminho> <alias>
 ```
 
-- `caminho` 📂: O caminho relativo ou absoluto para o projeto. Use `.` para se referir ao diretório atual.
-- `comando` 🧩: O alias que você deseja usar para este caminho.
-- Exemplo:
-  ```bash
-  pf add ./meu-projeto meuproj
-  ```
-  Ou para adicionar o diretório atual:
-  ```bash
-  pf add . diretoriocorrente
-  ```
+- `caminho` 📂: Caminho relativo ou absoluto para o projeto. Use `.` para se referir ao diretório atual.
+- `alias` 🧩: O alias que você deseja usar para este caminho.
+
+Exemplo:
+```bash
+pf add /meu-projeto meualias
+```
+
+Ou para adicionar o diretório atual:
+```bash
+pf add . diretorioatual
+```
 
 **Parâmetro Opcional:**
 
-Ao adicionar um caminho, você será solicitado a adicionar comandos adicionais 💬 que serão executados sempre que o alias for utilizado.
+Ao adicionar um caminho, você será solicitado a adicionar comandos adicionais 💬 que serão executados sempre que o alias for usado.
 
-### Ir para um Caminho 🏃‍♂️
+### Navegar para um Caminho 🏃‍♂️
 
-Navegue até um caminho salvo e abra-o no VS Code:
+Navegue para um caminho salvo e abra no VS Code:
 
 ```bash
-pf go <comando> [-nc]
+pf go <alias> [-e ou --extra]
 ```
 
-- `comando` 🧩: O alias do caminho para o qual você deseja navegar.
-- `-nc` 🚫: Pular a execução de comandos adicionais associados ao caminho.
-- Exemplo:
-  ```bash
-  pf go meuproj
-  pf go meuproj -nc
-  ```
+- `alias` 🧩: O alias do caminho para onde deseja navegar.
+- `-e --extra` 🚫: Ignorar a execução dos comandos adicionais associados ao caminho.
+
+Exemplo:
+```bash
+pf go meualias
+pf go meualias --extra
+```
+
+- `-c --code` 🚫: Ignorar a execução do comando 'code .' associado ao caminho.
+
+Exemplo:
+```bash
+pf go meualias
+pf go meualias --code
+```
 
 ### Listar Todos os Caminhos Salvos 📜
 
-Exiba uma lista de todos os caminhos salvos:
+Exibe uma lista de todos os caminhos salvos:
 
 ```bash
 pf list
@@ -82,18 +93,19 @@ pf list
 Edite interativamente um caminho salvo:
 
 ```bash
-pf edit <comando ou índice>
+pf edit <alias ou índice>
 ```
 
-- `comando` 🧩: O alias do caminho que você deseja editar.
-- `índice` 🔢: O índice numérico do caminho salvo (use `pf list` para encontrá-lo).
+- `alias` 🧩: O alias do caminho que deseja editar.
+- `índice` 🔢: O índice numérico do caminho salvo (use `pf list` para encontrar).
+- ⚠️ Nota: `exit` é uma palavra reservada e não pode ser usada como alias.
 
 ### Deletar um Caminho ❌
 
-Remova um caminho salvo pelo seu alias ou índice:
+Remova um caminho salvo pelo alias ou índice:
 
 ```bash
-pf delete <comando ou índice>
+pf delete <alias ou índice>
 ```
 
 ---
@@ -101,62 +113,76 @@ pf delete <comando ou índice>
 ## Exemplos 🛠️
 
 1. Adicionar um caminho de projeto e alias:
-   ```bash
-   pf add ./meu-app app
-   ```
 
-2. Adicionar o diretório atual como um caminho de projeto:
-   ```bash
-   pf add . diretoriocorrente
-   ```
+```bash
+pf add /meu-app app
+```
 
-3. Navegar até o caminho salvo e abri-lo no VS Code:
-   ```bash
-   pf go app
-   ```
+2. Adicionar o diretório atual como caminho de projeto:
 
-4. Listar todos os caminhos salvos:
-   ```bash
-   pf list
-   ```
+```bash
+pf add . diretorioatual
+```
+
+3. Navegar até o caminho salvo e abrir no VS Code:
+
+```bash
+pf go app
+```
+
+4. Navegar até um caminho salvo sem abrir no VS Code:
+
+```bash
+pf go app --code
+```
 
 5. Editar um caminho salvo:
-   ```bash
-   pf edit app
-   ```
+
+```bash
+pf edit app
+```
 
 6. Deletar um caminho salvo:
-   ```bash
-   pf delete app
-   ```
+
+```bash
+pf delete app
+```
+
+7. Listar todos os caminhos salvos:
+
+```bash
+pf list
+```
 
 ---
 
 ## Configuração ⚙️
 
-**Path-Fast** salva os caminhos em um arquivo JSON 📄 localizado no seu diretório home em `.path-fast/dist/paths.json`. Você pode fazer backup ou editar manualmente esse arquivo, se necessário.
+O **Path-Fast** salva os caminhos em um arquivo JSON 📄 localizado no seu diretório home, dentro de:
+
+```bash
+~/.path-fast/dist/paths.json
+```
+
+Você pode fazer backup ou editar esse arquivo manualmente se desejar.
 
 ---
 
 ## Licença 📜
 
-Este projeto é licenciado sob a Licença MIT.
+Este projeto está licenciado sob a licença MIT.
 
 ---
 
 ## Contribuindo 🤝
 
-Contribuições são bem-vindas! 🎉 Fique à vontade para abrir um problema 🐛 ou enviar um pull request 📬 para o [repositório no GitHub](https://github.com/eduardonicola/path-fast).
+Contribuições são bem-vindas! 🎉 Sinta-se à vontade para abrir uma issue 🐛 ou enviar um pull request 📬 para o [repositório GitHub](https://github.com/eduardonicola/path-fast).
 
 ---
 
 ## Agradecimentos 🙏
 
-Agradecimentos aos desenvolvedores e mantenedores das seguintes bibliotecas:
+Obrigado aos desenvolvedores e mantenedores das seguintes bibliotecas:
 
-- [Inquirer](https://www.npmjs.com/package/inquirer)💬
-- [commander](https://www.npmjs.com/package/commander)🛠️
-
----
-
-Se precisar de mais alguma coisa, me avise!
+- [Inquirer](https://www.npmjs.com/package/inquirer) 💬
+- [Commander](https://www.npmjs.com/package/commander) 🛠️
