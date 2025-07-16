@@ -16,7 +16,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "dev:pf": "node dist/index.js"
+    "dev:pf": "node dist/index.js",
+    "new:version": "npm version patch -m 'release: %s' && git push && git push --tags"
   },
   "repository": {
     "type": "git",
