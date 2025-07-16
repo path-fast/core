@@ -47,18 +47,21 @@ function changeToHomeAndTarget (targetPath: string) : string{
 }
 
 function execAdditional(additionals : string[], targetPath : string){
+  const userShell = process.env.SHELL || '/bin/bash';
 
   additionals.forEach((additional) => {
     console.log(`Executing command: ${additional}`);
-    
-    const additionalProcess = spawn(additional, { cwd: targetPath, shell: true });
 
-    additionalProcess.stdout.on('data', (data) => {
-      console.log(`[Output]: ${data}`);
-    });
+    const command = `${userShell} -ic "${additional}"`;
 
-    additionalProcess.stderr.on('data', (data) => {
-      console.info(`[Info]: ${data}`);
+    const additionalProcess = spawn(command, {
+      cwd: targetPath,
+      shell: true,
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        NVM_DIR: `${process.env.HOME}/.nvm`, 
+      }
     });
 
     additionalProcess.on('close', (code) => {
