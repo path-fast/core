@@ -5,7 +5,7 @@ import { readJsonFile } from '../utils/write-read-json.js';
 import { Opitions } from '../dto/index.js';
 
 
-export function goPath(command: string, option: Opitions ): void {
+export function goPath(command: string, option: Opitions): void {
 
   const data = readJsonFile()
   const entry = data.find(item => item.command === command);
@@ -17,7 +17,7 @@ export function goPath(command: string, option: Opitions ): void {
 
   const { path: targetPath } = entry;
   process.chdir(changeToHomeAndTarget(targetPath));
-  if(!option.code){
+  if (!option.code) {
     exec('code .', { cwd: targetPath }, (err) => {
       if (err) {
         console.error('Error opening VS Code:', err.message);
@@ -25,18 +25,18 @@ export function goPath(command: string, option: Opitions ): void {
         console.log(`Opened ${targetPath} in VS Code`);
       }
     });
-  }else{
+  } else {
     console.log('Skipped the "code ." command')
   }
 
   if (!option.extra) {
     execAdditional(entry.additional, targetPath)
-  }else{
+  } else {
     console.log('Skipped the additional commands')
   }
 }
 
-function changeToHomeAndTarget (targetPath: string) : string{
+function changeToHomeAndTarget(targetPath: string): string {
 
   const homeDir = os.homedir();
   process.chdir(homeDir);
@@ -46,7 +46,7 @@ function changeToHomeAndTarget (targetPath: string) : string{
   return absoluteTargetPath
 }
 
-function execAdditional(additionals : string[], targetPath : string){
+function execAdditional(additionals: string[], targetPath: string) {
   const userShell = process.env.SHELL || '/bin/bash';
 
   additionals.forEach((additional) => {
@@ -54,15 +54,14 @@ function execAdditional(additionals : string[], targetPath : string){
 
     const command = `${userShell} -ic "${additional}"`;
 
-    const additionalProcess = spawn(command, {
-      cwd: targetPath,
-      shell: true,
-      stdio: 'inherit',
-      env: {
-        ...process.env,
-        NVM_DIR: `${process.env.HOME}/.nvm`, 
-      }
+    const additionalProcess = spawn(command, { cwd: targetPath, shell: true });
+
+    additionalProcess.stdout.on('data', (data) => {
+      console.log(`[Output]: ${data}`);
     });
+
+    additionalProcess.stderr.on('data', (data) => {
+      console.info(`[Info]: ${data}`);
 
     additionalProcess.on('close', (code) => {
       if (code === 0) {
