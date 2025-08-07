@@ -62,6 +62,7 @@ function execAdditional(additionals: string[], targetPath: string) {
 
     additionalProcess.stderr.on('data', (data) => {
       console.info(`[Info]: ${data}`);
+    });
 
     additionalProcess.on('close', (code) => {
       if (code === 0) {
