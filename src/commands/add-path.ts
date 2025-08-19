@@ -2,7 +2,7 @@ import { cwd } from "process";
 import { readJsonFile, writeToJsonFile } from "../utils/write-read-json.js";
 import { checkIfExistsInJson, validatePathExists } from "../utils/validations.js";
 import { makePrompt } from "../utils/make-prompt.js";
-import { spawnPrompt } from "../utils/spown-pronpt.js";
+import { spawnPrompt } from "../utils/spawn-prompt.js";
 
 export async function addPath(
   projectPath: string,

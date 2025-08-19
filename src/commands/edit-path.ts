@@ -1,7 +1,7 @@
 import { readJsonFile, writeToJsonFile } from '../utils/write-read-json.js';
 import { makePrompt } from '../utils/make-prompt.js';
-import { PathEntry, PronptType } from '../dto/index.js';
-import { spawnPrompt } from '../utils/spown-pronpt.js';
+import { PathEntry, PromptType } from '../dto/index.js';
+import { spawnPrompt } from '../utils/spawn-prompt.js';
 import { validatePathExists } from '../utils/validations.js';
 
 const regex = / /
@@ -83,7 +83,7 @@ function callBackPath(): (edited: string) => string | false {
   }
 }
 
-async function execEditCommun(item: 'path' | 'command', pronpt:  PronptType, target:PathEntry , callBack?: (edited: string) => string | false) {
+async function execEditCommun(item: 'path' | 'command', pronpt:  PromptType, target:PathEntry , callBack?: (edited: string) => string | false) {
 
   const { edited } = await spawnPrompt(pronpt);
 
@@ -99,7 +99,7 @@ async function execEditCommun(item: 'path' | 'command', pronpt:  PronptType, tar
   }
 }
 
-async function execEditAdditional(pronpt:  PronptType, target:PathEntry ) {
+async function execEditAdditional(pronpt:  PromptType, target:PathEntry ) {
   
   const { newAdditional } = await spawnPrompt(pronpt);
         

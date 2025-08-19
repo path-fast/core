@@ -4,18 +4,18 @@ interface PathEntry {
   additional: string[];
 }
 
-interface Opitions {
+interface Options {
   code?: boolean;
   extra?: boolean;
 }
 
-type EnumTypes = "select" | "input" | "confirm" | "list"; 
+type EnumTypes = "select" | "input" | "confirm" | "list";
 
-interface PronptType {
+interface PromptType {
   type: EnumTypes;
   name: string;
   message: string;
   [x : string]: string | boolean | string[] | []
 }
 
-export { PathEntry, EnumTypes, PronptType, Opitions };
+export { PathEntry, EnumTypes, PromptType, Options };
