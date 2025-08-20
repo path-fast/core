@@ -1,4 +1,4 @@
-import { EnumTypes, PromptType } from "../dto/index.js";
+import type { EnumTypes, PromptType } from "../@types/index.js"
 
 export function makePrompt (type:EnumTypes, name: string, message: string): PromptType  {
 

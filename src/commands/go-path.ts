@@ -2,11 +2,10 @@ import os from 'os'
 import path from 'path';
 import { exec, spawn } from 'child_process';
 import { readJsonFile } from '../utils/write-read-json.js';
-import { Opitions } from '../dto/index.js';
+import { detectCommandType, buildShellCommand } from '../utils/command-detector.js';
+import type { CommandInfo, Options } from '../@types/index.js';
 
-
-export function goPath(command: string, option: Opitions): void {
-
+export function goPath(command: string, option: Options): void {
   const data = readJsonFile()
   const entry = data.find(item => item.command === command);
 
@@ -16,59 +15,101 @@ export function goPath(command: string, option: Opitions): void {
   }
 
   const { path: targetPath } = entry;
-  process.chdir(changeToHomeAndTarget(targetPath));
+  const absoluteTargetPath = changeToHomeAndTarget(targetPath);
+  
+  console.log(`Navigating to: ${absoluteTargetPath}`);
+  process.chdir(absoluteTargetPath);
+
   if (!option.code) {
-    exec('code .', { cwd: targetPath }, (err) => {
+    exec('code .', { cwd: absoluteTargetPath }, (err) => {
       if (err) {
         console.error('Error opening VS Code:', err.message);
       } else {
-        console.log(`Opened ${targetPath} in VS Code`);
+        console.log(`Opened ${absoluteTargetPath} in VS Code`);
       }
     });
   } else {
     console.log('Skipped the "code ." command')
   }
 
-  if (!option.extra) {
-    execAdditional(entry.additional, targetPath)
+  if (!option.extra && entry.additional.length > 0) {
+    execAdditionalSequentially(entry.additional, absoluteTargetPath)
+      .then(() => {
+        console.log('All additional commands completed.');
+      })
+      .catch((error) => {
+        console.error('Error executing additional commands:', error);
+      });
   } else {
     console.log('Skipped the additional commands')
   }
 }
 
 function changeToHomeAndTarget(targetPath: string): string {
-
   const homeDir = os.homedir();
-  process.chdir(homeDir);
-
-  const absoluteTargetPath = path.isAbsolute(targetPath) ? targetPath : path.resolve(homeDir, targetPath);
-
-  return absoluteTargetPath
+  
+  // If path is already absolute, use it directly
+  if (path.isAbsolute(targetPath)) {
+    return targetPath;
+  }
+  
+  // For relative paths, resolve from home directory
+  return path.resolve(homeDir, targetPath);
 }
 
-function execAdditional(additionals: string[], targetPath: string) {
-  const userShell = process.env.SHELL || '/bin/bash';
+async function execAdditionalSequentially(additionals: string[], targetPath: string): Promise<void> {
+  for (const additional of additionals) {
+    console.log(`\n🚀 Executing command: ${additional}`);
+    
+    const commandInfo = detectCommandType(additional);
+    await executeCommand(commandInfo, targetPath);
+  }
+}
 
-  additionals.forEach((additional) => {
-    console.log(`Executing command: ${additional}`);
+function executeCommand(commandInfo: CommandInfo, cwd: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const shellCommand = buildShellCommand(commandInfo);
+    
+    console.log(`📋 Command type: ${commandInfo.type}`);
+    if (commandInfo.requiresInteractive) {
+      console.log('🔄 Running in interactive mode...');
+    }
+    
+    const options = {
+      cwd,
+      shell: true,
+      stdio: commandInfo.requiresInteractive ? 'inherit' : 'pipe'
+    } as any;
 
-    const command = `${userShell} -ic "${additional}"`;
+    const childProcess = spawn(shellCommand, { ...options });
 
-    const additionalProcess = spawn(command, { cwd: targetPath, shell: true });
+    // For non-interactive commands, handle output manually
+    if (!commandInfo.requiresInteractive) {
+      if (childProcess.stdout) {
+        childProcess.stdout.on('data', (data) => {
+          console.log(`📤 [Output]: ${data.toString().trim()}`);
+        });
+      }
 
-    additionalProcess.stdout.on('data', (data) => {
-      console.log(`[Output]: ${data}`);
+      if (childProcess.stderr) {
+        childProcess.stderr.on('data', (data) => {
+          console.info(`ℹ️  [Info]: ${data.toString().trim()}`);
+        });
+      }
+    }
+
+    childProcess.on('error', (error) => {
+      console.error(`❌ Error spawning command: ${error.message}`);
+      reject(error);
     });
 
-    additionalProcess.stderr.on('data', (data) => {
-      console.info(`[Info]: ${data}`);
-    });
-
-    additionalProcess.on('close', (code) => {
+    childProcess.on('close', (code) => {
       if (code === 0) {
-        console.log(`The command "${additional}" executed successfully.`);
+        console.log(`✅ Command "${commandInfo.command}" executed successfully.`);
+        resolve();
       } else {
-        console.error(`The command "${additional}" exited with code: ${code}`);
+        console.error(`❌ Command "${commandInfo.command}" exited with code: ${code}`);
+        reject(new Error(`Command failed with exit code ${code}`));
       }
     });
   });

@@ -5,9 +5,12 @@
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
+    "declaration": true,
+    "declarationDir": "dist/@types",
+    "typeRoots": ["./src/@types", "./node_modules/@types"],
     "paths": {
       "@/*": ["./*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "src/@types/*.d.ts"]
 }

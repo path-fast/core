@@ -34,7 +34,8 @@
     "path",
     "shortcut",
     "project-management",
-    "automation"
+    "automation",
+    "vscode"
   ],
   "dependencies": {
     "commander": "^13.1.0",

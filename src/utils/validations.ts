@@ -1,26 +1,37 @@
-import  { existsSync }  from "fs";
-import { PathEntry } from "../dto/index.js";
+import { existsSync } from "fs";
 import { homedir } from "os";
-const userHome =  homedir()
+import { resolve, isAbsolute } from "path";
+import type { PathEntry } from "../@types/index.js";
 
-export function validatePathExists(projectPath: string) {
+const userHome = homedir();
 
-  if(!projectPath.startsWith('/')){
-    projectPath = `/${projectPath}`
+export function validatePathExists(projectPath: string): string {
+  // Handle current directory
+  if (projectPath === '.') {
+    return process.cwd();
   }
 
-  const startWithHome = RegExp(userHome).exec(projectPath)
-
-  if(startWithHome && existsSync(projectPath)){
-    return projectPath
+  // If it's already an absolute path, check if it exists
+  if (isAbsolute(projectPath)) {
+    if (existsSync(projectPath)) {
+      return projectPath;
+    }
+    throw new Error(`The path "${projectPath}" does not exist.`);
   }
-  const projectPathWithHome = `${userHome}${projectPath}`
-  if(existsSync(projectPathWithHome)){
-    return projectPathWithHome
+
+  // For relative paths, resolve from current directory first
+  const resolvedFromCwd = resolve(process.cwd(), projectPath);
+  if (existsSync(resolvedFromCwd)) {
+    return resolvedFromCwd;
+  }
+
+  // If not found from cwd, try resolving from home directory
+  const resolvedFromHome = resolve(userHome, projectPath);
+  if (existsSync(resolvedFromHome)) {
+    return resolvedFromHome;
   }
 
   throw new Error(`The path "${projectPath}" does not exist.`);
-
 }
 
 export function checkIfExistsInJson(

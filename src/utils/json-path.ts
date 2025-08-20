@@ -1,6 +1,12 @@
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from "path";
+import { homedir } from 'os';
+import { resolve, join } from "path";
+import fs from 'fs';
 
-const fileName = fileURLToPath(import.meta.url);
-const dirName = dirname(fileName);
-export const filePath = resolve(dirName, "../paths.json");
+const homeDir = homedir();
+const configDir = join(homeDir, '.path-fast');
+export const filePath = resolve(configDir, 'paths.json');
+
+// Ensure the config directory exists
+if (!fs.existsSync(configDir)) {
+  fs.mkdirSync(configDir, { recursive: true });
+}
