@@ -13,7 +13,6 @@ export interface Options {
   extra?: boolean;
 }
 
-
 export type EnumTypes = "select" | "input" | "confirm" | "list";
 
 export interface PromptType {
