@@ -21,14 +21,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/eduardo-nicola/path-fast.git"
+    "url": "https://github.com/path-fast/core.git"
   },
   "bugs": {
-    "url": "https://github.com/eduardo-nicola/path-fast/issues"
+    "url": "https://github.com/path-fast/core/issues"
   },
   "author": "Eduardo Nicola possaniduardo@gmail.com",
   "license": "MIT",
-  "homepage": "https://github.com/eduardo-nicola/path-fast#readme",
+  "homepage": "https://github.com/path-fast/core#readme",
   "keywords": [
     "cli",
     "path",
