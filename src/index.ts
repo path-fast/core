@@ -24,7 +24,7 @@ program
   .option('-c , --code', 'Do not execute "code ." command')
   .option('-e , --extra', 'Do not execute additional commands')
   .description('Navigate to the project path, open it in VS Code, and run your custom commands.')
-  .action(goPath);
+  .action(goPath);// Check
 
 program
   .command('list')

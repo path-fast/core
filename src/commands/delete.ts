@@ -1,6 +1,6 @@
 import { readJsonFile, writeToJsonFile } from "../utils/write-read-json.js";
 import { makePrompt } from "../utils/make-prompt.js";
-import { spawnPrompt } from "../utils/spown-pronpt.js";
+import { spawnPrompt } from "../utils/spawn-prompt.js";
 
 export async function deletePath(command: string): Promise<void> {
   const data = readJsonFile();

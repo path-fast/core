@@ -1,6 +1,6 @@
 {
   "name": "path-fast",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "A CLI tool designed to streamline access to projects.",
   "main": "dist/index.js",
   "type": "module",
@@ -21,20 +21,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/eduardo-nicola/path-fast.git"
+    "url": "https://github.com/path-fast/core.git"
   },
   "bugs": {
-    "url": "https://github.com/eduardo-nicola/path-fast/issues"
+    "url": "https://github.com/path-fast/core/issues"
   },
   "author": "Eduardo Nicola possaniduardo@gmail.com",
   "license": "MIT",
-  "homepage": "https://github.com/eduardo-nicola/path-fast#readme",
+  "homepage": "https://github.com/path-fast/core#readme",
   "keywords": [
     "cli",
     "path",
     "shortcut",
     "project-management",
-    "automation"
+    "automation",
+    "vscode"
   ],
   "dependencies": {
     "commander": "^13.1.0",

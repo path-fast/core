@@ -1,10 +1,8 @@
 import fs from "fs";
 import { filePath } from "./json-path.js";
-import { PathEntry } from "../dto/index.js";
-
+import type { PathEntry } from "../@types/index.js";
 
 export function readJsonFile(): PathEntry[] {
-  
   if (fs.existsSync(filePath)) {
     return JSON.parse(fs.readFileSync(filePath, "utf-8"));
   }
