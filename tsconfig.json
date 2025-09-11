@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es2024",
     "module": "nodenext",
+    "rootDir": "src",
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
@@ -10,8 +11,9 @@
     "typeRoots": ["./node_modules/@types"],
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "package.json"],
   "exclude": ["node_modules", "dist"]
 }
