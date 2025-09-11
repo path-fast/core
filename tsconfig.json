@@ -6,11 +6,12 @@
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
-    "declarationDir": "dist/@types",
-    "typeRoots": ["./src/@types", "./node_modules/@types"],
+    "declarationDir": "dist",
+    "typeRoots": ["./node_modules/@types"],
     "paths": {
       "@/*": ["./*"]
     }
   },
-  "include": ["src", "src/@types/*.d.ts"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
