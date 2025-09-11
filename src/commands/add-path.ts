@@ -8,22 +8,27 @@ export async function addPath(
   projectPath: string,
   command: string,
 ): Promise<void> {
+  try {
+    const absolutePath = projectPath === "." ? validatePathExists(cwd()) : validatePathExists(projectPath);
 
-  const absolutePath = projectPath === "." ? validatePathExists(cwd()) : validatePathExists(projectPath);
+    const data = readJsonFile();
 
-  const data = readJsonFile();
+    if (checkIfExistsInJson(data, absolutePath, command)) {
+      return;
+    }
 
-  if (checkIfExistsInJson(data, absolutePath, command)) {
-    return;
+    const additionalParams = await makeAdditional()
+    data.push({ path: absolutePath, command, additional: additionalParams });
+
+    writeToJsonFile(data);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`❌ ${error.message}`)
+    }
   }
-
-  const additionalParams = await makeAdditional()
-  data.push({ path: absolutePath, command, additional: additionalParams });
-
-  writeToJsonFile(data);
 }
 
-async function makeAdditional (): Promise<string[]>{
+async function makeAdditional(): Promise<string[]> {
 
   const promptAnswers = makePrompt('confirm', 'addAdditional', 'Do you want to add an additional parameter?')
   promptAnswers.default = false
@@ -33,12 +38,12 @@ async function makeAdditional (): Promise<string[]>{
 
   while (answers.addAdditional) {
 
-    const promptAdditional = makePrompt('input','additional','Please provide the additional parameter:')
+    const promptAdditional = makePrompt('input', 'additional', 'Please provide the additional parameter:')
     const additionalAnswer = await spawnPrompt(promptAdditional);
 
     additionalParams.push(additionalAnswer.additional);
 
-    const promptNextAdditional = makePrompt('confirm','addAnother','Do you want to add another parameter?')
+    const promptNextAdditional = makePrompt('confirm', 'addAnother', 'Do you want to add another parameter?')
     promptNextAdditional.default = false
     const continueAddingAnswer = await spawnPrompt(promptNextAdditional);
 
