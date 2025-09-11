@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
+import pkg from '../package.json' with { type: 'json' };
 import { addPath } from './commands/add-path.js';
 import { goPath } from './commands/go-path.js';
 import { listPaths } from './commands/list-paths.js';
@@ -12,7 +13,7 @@ const program = new Command();
 program
   .name('pf')
   .description('A CLI tool to manage project paths with shortcuts')
-  .version('1.0.0'); // Check
+  .version(pkg.version);
 
 program
   .command('add <path> <command>')
