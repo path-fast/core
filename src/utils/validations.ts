@@ -43,10 +43,8 @@ export function checkIfExistsInJson(
     (entry) => entry.path === absolutePath || entry.command === command
   );
   if (existingEntry) {
-    console.error(
-      `Error: The command "${command}" or the path "${absolutePath}" already exists in the registry.`
-    );
-    return true;
+    throw new Error(`Error: The command "${command}" or the path "${absolutePath}" already exists in the registry.`)
   }
-  return false; 
+  
+  return false;
 }
