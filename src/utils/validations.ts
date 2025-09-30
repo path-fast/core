@@ -6,6 +6,9 @@ import { cwd } from "process";
 
 export function validatePathExists(projectPath: string): string {
 
+  if(projectPath === ".") {
+    return cwd();
+  }
 
   const resolvedFromCwd = cwd() + projectPath;
   if (existsSync(resolvedFromCwd)) {

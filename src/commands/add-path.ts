@@ -1,4 +1,3 @@
-import { cwd } from "process";
 import { readJsonFile, writeToJsonFile } from "../utils/write-read-json.js";
 import { checkIfExistsInJson, validatePathExists } from "../utils/validations.js";
 import { makePrompt } from "../utils/make-prompt.js";
@@ -9,7 +8,7 @@ export async function addPath(
   command: string,
 ): Promise<void> {
   try {
-    const absolutePath = projectPath === "." ? validatePathExists(cwd()) : validatePathExists(projectPath);
+    const absolutePath = validatePathExists(projectPath);
 
     const data = readJsonFile();
 
