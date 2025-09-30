@@ -11,15 +11,15 @@ import { editPath } from './commands/edit-path.js';
 const program = new Command();
 
 program
-.name('pf')
-.description('A CLI tool to manage project paths with shortcuts')
-.version(pkg.version);
+  .name('pf')
+  .description('A CLI tool to manage project paths with shortcuts')
+  .version(pkg.version);
 
 program
   .command('add <path> <command>')
   .description('Add a project path with a shortcut')
   .action(addPath); // Check
-  
+
 program
   .command('go <command>')
   .option('-c , --code', 'Do not execute "code ." command')
@@ -39,7 +39,7 @@ program
 
 program
   .command('edit <command>')
-  .description('Edit your shortcut' )
+  .description('Edit your shortcut')
   .action(editPath); // Check
 
 program.parse(process.argv);
