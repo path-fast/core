@@ -1,36 +1,22 @@
 import { existsSync } from "fs";
 import { homedir } from "os";
-import { resolve, isAbsolute } from "path";
 import type { PathEntry } from "../@types/index.js";
+import { cwd } from "process";
 
-const userHome = homedir();
 
 export function validatePathExists(projectPath: string): string {
-  // Handle current directory
-  if (projectPath === '.') {
-    return process.cwd();
-  }
 
-  // If it's already an absolute path, check if it exists
-  if (isAbsolute(projectPath)) {
-    if (existsSync(projectPath)) {
-      return projectPath;
-    }
-    throw new Error(`The path "${projectPath}" does not exist.`);
-  }
 
-  // For relative paths, resolve from current directory first
-  const resolvedFromCwd = resolve(process.cwd(), projectPath);
+  const resolvedFromCwd = cwd() + projectPath;
   if (existsSync(resolvedFromCwd)) {
     return resolvedFromCwd;
   }
 
-  // If not found from cwd, try resolving from home directory
-  const resolvedFromHome = resolve(userHome, projectPath);
+  const resolvedFromHome = homedir() + projectPath;
   if (existsSync(resolvedFromHome)) {
     return resolvedFromHome;
   }
-
+  
   throw new Error(`The path "${projectPath}" does not exist.`);
 }
 
