@@ -7,7 +7,7 @@ import type { PathEntry, PromptType } from '../@types/index.js';
 const regex = / /
 
 export async function editPath(input: string): Promise<void> {
-  const data = readJsonFile();
+  const data = readJsonFile('path');
 
   const targetEditing = catchTarget(input, data)
 
@@ -46,7 +46,7 @@ export async function editPath(input: string): Promise<void> {
       }
 
       case 'Save & Exit': {
-        writeToJsonFile(data);
+        writeToJsonFile('path', data);
         console.log('Changes saved successfully!');
         editing = false;
         break;

@@ -6,7 +6,7 @@ import { detectCommandType, buildShellCommand } from '../utils/command-detector.
 import type { CommandInfo, Options } from '../@types/index.js';
 
 export function goPath(command: string, option: Options): void {
-  const data = readJsonFile()
+  const data = readJsonFile('path')
   const entry = data.find(item => item.command === command);
 
   if (!entry) {

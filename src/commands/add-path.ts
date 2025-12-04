@@ -10,7 +10,7 @@ export async function addPath(
   try {
     const absolutePath = validatePathExists(projectPath);
 
-    const data = readJsonFile();
+    const data = readJsonFile('path');
 
     if (checkIfExistsInJson(data, absolutePath, command)) {
       return;
@@ -19,7 +19,7 @@ export async function addPath(
     const additionalParams = await makeAdditional()
     data.push({ path: absolutePath, command, additional: additionalParams });
 
-    writeToJsonFile(data);
+    writeToJsonFile('path', data);
   } catch (error) {
     if (error instanceof Error) {
       console.error(`❌ ${error.message}`)

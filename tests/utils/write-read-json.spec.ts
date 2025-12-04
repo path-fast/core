@@ -37,7 +37,7 @@ describe('write-read-json', () => {
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue(mockJsonString);
 
-      const result = readJsonFile();
+      const result = readJsonFile('path');
 
       expect(mockExistsSync).toHaveBeenCalledWith('/mock/path/to/paths.json');
       expect(mockReadFileSync).toHaveBeenCalledWith('/mock/path/to/paths.json', 'utf-8');
@@ -47,7 +47,7 @@ describe('write-read-json', () => {
     it('should return empty array when file does not exist', () => {
       mockExistsSync.mockReturnValue(false);
 
-      const result = readJsonFile();
+      const result = readJsonFile('path');
 
       expect(mockExistsSync).toHaveBeenCalledWith('/mock/path/to/paths.json');
       expect(mockReadFileSync).not.toHaveBeenCalled();
@@ -58,7 +58,7 @@ describe('write-read-json', () => {
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue('[]');
 
-      const result = readJsonFile();
+      const result = readJsonFile('path');
 
       expect(result).toEqual([]);
     });
@@ -68,7 +68,7 @@ describe('write-read-json', () => {
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue(JSON.stringify(invalidData));
 
-      const result = readJsonFile();
+      const result = readJsonFile('path');
 
       expect(result).toEqual(invalidData);
     });
@@ -77,7 +77,7 @@ describe('write-read-json', () => {
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue('invalid json content');
 
-      expect(() => readJsonFile()).toThrow();
+      expect(() => readJsonFile('path')).toThrow();
     });
 
     it('should handle file read errors', () => {
@@ -86,7 +86,7 @@ describe('write-read-json', () => {
         throw new Error('File read error');
       });
 
-      expect(() => readJsonFile()).toThrow('File read error');
+      expect(() => readJsonFile('path')).toThrow('File read error');
     });
   });
 
@@ -95,7 +95,7 @@ describe('write-read-json', () => {
       const mockData: PathEntry[] = samplePathEntries;
       const expectedJsonString = JSON.stringify(mockData, null, 2);
 
-      writeToJsonFile(mockData);
+      writeToJsonFile('path', mockData);
 
       expect(mockWriteFileSync).toHaveBeenCalledWith(
         '/mock/path/to/paths.json',
@@ -108,7 +108,7 @@ describe('write-read-json', () => {
       const mockData: PathEntry[] = [];
       const expectedJsonString = JSON.stringify(mockData, null, 2);
 
-      writeToJsonFile(mockData);
+      writeToJsonFile('path',mockData);
 
       expect(mockWriteFileSync).toHaveBeenCalledWith(
         '/mock/path/to/paths.json',
@@ -121,7 +121,7 @@ describe('write-read-json', () => {
       const mockData: PathEntry[] = [samplePathEntries[0]];
       const expectedJsonString = JSON.stringify(mockData, null, 2);
 
-      writeToJsonFile(mockData);
+      writeToJsonFile('path',mockData);
 
       expect(mockWriteFileSync).toHaveBeenCalledWith(
         '/mock/path/to/paths.json',
@@ -137,7 +137,7 @@ describe('write-read-json', () => {
         throw new Error('File write error');
       });
 
-      expect(() => writeToJsonFile(mockData)).toThrow('File write error');
+      expect(() => writeToJsonFile('path',mockData)).toThrow('File write error');
     });
 
     it('should format JSON with proper indentation', () => {
@@ -149,7 +149,7 @@ describe('write-read-json', () => {
         }
       ];
 
-      writeToJsonFile(mockData);
+      writeToJsonFile('path',mockData);
 
       const writtenContent = (mockWriteFileSync as jest.Mock).mock.calls[0][1];
       
@@ -168,7 +168,7 @@ describe('write-read-json', () => {
         }
       ];
 
-      writeToJsonFile(mockData);
+      writeToJsonFile('path',mockData);
 
       expect(mockWriteFileSync).toHaveBeenCalled();
       
@@ -183,14 +183,14 @@ describe('write-read-json', () => {
       const expectedJsonString = JSON.stringify(mockData, null, 2);
 
       // First write
-      writeToJsonFile(mockData);
+      writeToJsonFile('path',mockData);
       
       // Simulate file system having the written data
       mockExistsSync.mockReturnValue(true);
       mockReadFileSync.mockReturnValue(expectedJsonString);
       
       // Then read
-      const readResult = readJsonFile();
+      const readResult = readJsonFile('path');
       
       expect(readResult).toEqual(mockData);
     });
