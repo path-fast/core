@@ -17,6 +17,10 @@
     "build": "tsc && cp package.json dist/",
     "dev": "tsc --watch",
     "dev:pf": "node dist/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --coverage --watchAll=false",
     "new:version": "npm version patch -m 'release: %s' && git push && git push --tags"
   },
   "repository": {
@@ -26,7 +30,7 @@
   "bugs": {
     "url": "https://github.com/path-fast/core/issues"
   },
-  "author": "Eduardo Nicola possaniduardo@gmail.com",
+  "author": "Eduardo Nicola eduardonicolagit@gmail.com",
   "license": "MIT",
   "homepage": "https://github.com/path-fast/core#readme",
   "keywords": [
@@ -42,7 +46,12 @@
     "inquirer": "^12.3.2"
   },
   "devDependencies": {
+    "@types/inquirer": "^9.0.9",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.10.10",
+    "jest": "^30.2.0",
+    "ts-node": "^10.9.2",
+    "ts-jest": "^29.4.5",
     "typescript": "^5.7.3"
   },
   "packageManager": "pnpm@10.19.0"
