@@ -20,8 +20,10 @@ export function goPath(command: string, option: Options): void {
   console.log(`Navigating to: ${absoluteTargetPath}`);
   process.chdir(absoluteTargetPath);
 
+  const ideConfig = readJsonFile('ide');
+
   if (!option.code) {
-    exec('code .', { cwd: absoluteTargetPath }, (err) => {
+    exec(ideConfig.command, { cwd: absoluteTargetPath }, (err) => {
       if (err) {
         console.error('Error opening VS Code:', err.message);
       } else {

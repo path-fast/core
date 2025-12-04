@@ -2,6 +2,9 @@
 
 // Global type declarations for Path-Fast
 
+export interface ideConfig {
+  command: string;
+}
 export interface PathEntry {
   path: string;
   command: string;
