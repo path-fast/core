@@ -44,7 +44,7 @@ program
   .action(editPath); // Check
 
 program
-  .command('set-ide <ide-command>')
+  .command('set-ide')
   .description("Set your preferred IDE for opening projects ex: pf set-ide 'code .'")
   .action(setIde);
 

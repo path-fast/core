@@ -1,5 +1,4 @@
-import os from 'os'
-import path from 'path';
+
 import { exec, spawn } from 'child_process';
 import { readJsonFile } from '../utils/write-read-json.js';
 import { detectCommandType, buildShellCommand } from '../utils/command-detector.js';
@@ -24,7 +23,7 @@ export function goPath(command: string, option: Options): void {
   const ideRunner = ideCommand || ideCommandConfig || 'code .';
 
   if (!option.code) {
-    exec(ideRunner, { cwd: targetPath }, (err) => {
+  exec(ideRunner, { cwd: targetPath }, (err) => {
       if (err) {
         console.error(`Error opening IDE with command "${ideRunner}":`, err.message);
       } else {
@@ -50,58 +49,52 @@ export function goPath(command: string, option: Options): void {
 
 
 async function execAdditionalSequentially(additionals: string[], targetPath: string): Promise<void> {
-  for (const additional of additionals) {
-    console.log(`\n🚀 Executing command: ${additional}`);
-    
-    const commandInfo = detectCommandType(additional);
-    await executeCommand(commandInfo, targetPath);
-  }
+  const commandInfos = additionals.map(cmd => detectCommandType(cmd));
+  
+  console.log(`\n🚀 Executing ${commandInfos.length} commands in batch mode:`);
+  additionals.forEach((cmd, i) => console.log(`   ${i + 1}. ${cmd}`));
+  console.log('');
+  await executeBatchCommand(commandInfos, targetPath);
 }
 
-function executeCommand(commandInfo: CommandInfo, cwd: string): Promise<void> {
+function executeBatchCommand(commandInfos: CommandInfo[], cwd: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    const shellCommand = buildShellCommand(commandInfo);
+    const shellCommand = buildShellCommand(commandInfos);
     
-    console.log(`📋 Command type: ${commandInfo.type}`);
-    if (commandInfo.requiresInteractive) {
-      console.log('🔄 Running in interactive mode...');
-    }
-    
+    console.log(`📦 Batching commands with shared shell context`,);
     const options = {
       cwd,
       shell: true,
-      stdio: commandInfo.requiresInteractive ? 'inherit' : 'pipe'
+      stdio: 'pipe'
     } as any;
 
-    const childProcess = spawn(shellCommand, { ...options });
+    
+    const childProcess = spawn(shellCommand, options);
 
-    // For non-interactive commands, handle output manually
-    if (!commandInfo.requiresInteractive) {
-      if (childProcess.stdout) {
-        childProcess.stdout.on('data', (data) => {
-          console.log(`📤 [Output]: ${data.toString().trim()}`);
-        });
-      }
+    if (childProcess.stdout) {
+      childProcess.stdout.on('data', (data) => {
+        console.log(`📤 [Output]: ${data.toString().trim()}`);
+      });
+    }
 
-      if (childProcess.stderr) {
-        childProcess.stderr.on('data', (data) => {
-          console.info(`ℹ️  [Info]: ${data.toString().trim()}`);
-        });
-      }
+    if (childProcess.stderr) {
+      childProcess.stderr.on('data', (data) => {
+        console.info(`ℹ️  [Info]: ${data.toString().trim()}`);
+      });
     }
 
     childProcess.on('error', (error) => {
-      console.error(`❌ Error spawning command: ${error.message}`);
+      console.error(`❌ Error spawning batch: ${error.message}`);
       reject(error);
     });
 
     childProcess.on('close', (code) => {
       if (code === 0) {
-        console.log(`✅ Command "${commandInfo.command}" executed successfully.`);
+        console.log(`✅ All batched commands executed successfully`);
         resolve();
       } else {
-        console.error(`❌ Command "${commandInfo.command}" exited with code: ${code}`);
-        reject(new Error(`Command failed with exit code ${code}`));
+        console.error(`❌ Batch execution failed with exit code: ${code}`);
+        reject(new Error(`Batch failed with exit code ${code}`));
       }
     });
   });

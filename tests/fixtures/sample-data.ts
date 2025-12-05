@@ -10,16 +10,19 @@ export const samplePathEntries: PathEntry[] = [
     path: '/home/user/projects/project1',
     command: 'proj1',
     additional: ['npm install', 'npm start'],
+    ideCommand: ''
   },
   {
     path: '/home/user/projects/project2',
     command: 'proj2',
     additional: [],
+    ideCommand: ''
   },
   {
     path: '/home/user/projects/backend-api',
     command: 'api',
     additional: ['docker-compose up -d', 'npm run dev'],
+    ideCommand: ''
   },
 ];
 
