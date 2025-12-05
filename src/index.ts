@@ -7,6 +7,7 @@ import { goPath } from './commands/go-path.js';
 import { listPaths } from './commands/list-paths.js';
 import { deletePath } from './commands/delete.js';
 import { editPath } from './commands/edit-path.js';
+import { setIde } from './commands/ide-set.js';
 
 const program = new Command();
 
@@ -41,5 +42,10 @@ program
   .command('edit <command>')
   .description('Edit your shortcut')
   .action(editPath); // Check
+
+program
+  .command('set-ide')
+  .description("Set your preferred IDE for opening projects ex: pf set-ide 'code .'")
+  .action(setIde);
 
 program.parse(process.argv);

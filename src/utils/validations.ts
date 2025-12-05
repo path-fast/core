@@ -10,16 +10,17 @@ export function validatePathExists(projectPath: string): string {
     return cwd();
   }
 
+  const resolvedAsIs = projectPath.startsWith("/") ? projectPath : "/" + projectPath;
+
   const resolvedFromCwd = cwd() + projectPath;
   if (existsSync(resolvedFromCwd)) {
     return resolvedFromCwd;
   }
 
-  const resolvedFromHome = homedir() + projectPath;
+  const resolvedFromHome = homedir() + resolvedAsIs;
   if (existsSync(resolvedFromHome)) {
     return resolvedFromHome;
   }
-  
   throw new Error(`The path "${projectPath}" does not exist.`);
 }
 

@@ -1,11 +1,13 @@
 // types/index.d.ts
 
-// Global type declarations for Path-Fast
-
+export interface ideConfig {
+  command: string;
+}
 export interface PathEntry {
   path: string;
   command: string;
   additional: string[];
+  ideCommand: string | null;
 }
 
 export interface Options {
@@ -25,7 +27,6 @@ export interface PromptType {
 export interface CommandInfo {
   command: string;
   type: CommandType;
-  requiresInteractive: boolean;
   requiresEnv: boolean;
 }
 

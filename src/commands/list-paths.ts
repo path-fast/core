@@ -1,7 +1,7 @@
 import { readJsonFile } from '../utils/write-read-json.js';
 
 export function listPaths(): void {
-  const data = readJsonFile();
+  const data = readJsonFile('path');
 
   if (data.length === 0) {
     console.error('No paths found. Add a path first using path-fast add <project-path> <your-command>');

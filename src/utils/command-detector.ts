@@ -7,106 +7,83 @@ export function detectCommandType(command: string): CommandInfo {
 
   switch (firstWord) {
     case 'make':
-      return {
-        command: trimmedCommand,
-        type: CommandType.MAKE,
-        requiresInteractive: false,
-        requiresEnv: true
-      };
+      return makeObjectCommand(trimmedCommand, CommandType.MAKE, true);
 
     case 'docker':
-      return {
-        command: trimmedCommand,
-        type: CommandType.DOCKER,
-        requiresInteractive: trimmedCommand.includes(' -it ') || trimmedCommand.includes(' exec '),
-        requiresEnv: false
-      };
+    case 'docker compose':
+      return  makeObjectCommand(trimmedCommand, CommandType.DOCKER, false);
 
     case 'docker-compose':
-    case 'docker compose':
-      return {
-        command: trimmedCommand,
-        type: CommandType.DOCKER_COMPOSE,
-        requiresInteractive: trimmedCommand.includes(' -it ') || trimmedCommand.includes(' exec '),
-        requiresEnv: false
-      };
+      return makeObjectCommand(trimmedCommand, CommandType.DOCKER_COMPOSE, false);
 
     case 'npm':
-      return {
-        command: trimmedCommand,
-        type: CommandType.NPM,
-        requiresInteractive: isPackageManagerInteractive(trimmedCommand),
-        requiresEnv: true
-      };
+      return makeObjectCommand(trimmedCommand, CommandType.NPM, true);
 
     case 'yarn':
-      return {
-        command: trimmedCommand,
-        type: CommandType.YARN,
-        requiresInteractive: isPackageManagerInteractive(trimmedCommand),
-        requiresEnv: true
-      };
+      return makeObjectCommand(trimmedCommand, CommandType.YARN, true);
 
     case 'pnpm':
-      return {
-        command: trimmedCommand,
-        type: CommandType.PNPM,
-        requiresInteractive: isPackageManagerInteractive(trimmedCommand),
-        requiresEnv: true
-      };
+      return makeObjectCommand(trimmedCommand, CommandType.PNPM, true); 
 
     case 'bun':
-      return {
-        command: trimmedCommand,
-        type: CommandType.BUN,
-        requiresInteractive: isPackageManagerInteractive(trimmedCommand),
-        requiresEnv: true
-      };
+      return makeObjectCommand(trimmedCommand, CommandType.BUN, true);
 
     case 'nvm':
-      return {
-        command: trimmedCommand,
-        type: CommandType.NVM,
-        requiresInteractive: false,
-        requiresEnv: true
-      };
+      return makeObjectCommand(trimmedCommand, CommandType.NVM, true);
 
     case 'fnm':
-      return {
-        command: trimmedCommand,
-        type: CommandType.FNM,
-        requiresInteractive: false,
-        requiresEnv: true
-      };
+      return makeObjectCommand(trimmedCommand, CommandType.FNM, true);
 
     default:
-      return {
-        command: trimmedCommand,
-        type: CommandType.GENERIC,
-        requiresInteractive: false,
-        requiresEnv: true
-      };
+      return makeObjectCommand(trimmedCommand, CommandType.GENERIC, true);
   }
 }
 
-function isPackageManagerInteractive(command: string): boolean {
-  const interactiveCommands = ['init', 'create', 'add', 'install'];
-  return interactiveCommands.some(cmd => command.includes(` ${cmd}`));
+function makeObjectCommand(command: string, type: CommandType, requiresEnv: boolean): CommandInfo {
+  return{
+    command,
+    type,
+    requiresEnv
+  }
 }
 
 export function getOptimalShell(): string {
-  // Try to get user's preferred shell from environment
   return process.env.SHELL || '/bin/bash';
 }
 
-export function buildShellCommand(commandInfo: CommandInfo): string {
+export function buildShellCommand(commandInfoOrArray: CommandInfo | CommandInfo[]): string {
   const shell = getOptimalShell();
 
-  if (commandInfo.requiresEnv) {
-    // Use interactive login shell to load full environment
-    return `${shell} -lic "${commandInfo.command}"`;
-  } else {
-    // Use non-interactive shell for simple commands
-    return `${shell} -c "${commandInfo.command}"`;
+  if (!Array.isArray(commandInfoOrArray)) {
+    const commandInfo = commandInfoOrArray;
+    if (commandInfo.requiresEnv) {
+      return `${shell} -lic "${commandInfo.command}"`;
+    } else {
+      return `${shell} -c "${commandInfo.command}"`;
+    }
   }
+
+  // Handle multiple commands - batch execution
+  const commands = commandInfoOrArray;
+  
+  if (commands.length === 0) {
+    return '';
+  }
+
+  if (commands.length === 1) {
+    return buildShellCommand(commands[0]);
+  }
+
+  // Check if ANY command requires env loading
+  const needsEnv = commands.some(cmd => cmd.requiresEnv);
+  
+  // Join commands with && to maintain context and stop on first failure
+  const joinedCommand = commands
+    .map(cmd => cmd.command)
+    .join(' && ');
+  
+  if (needsEnv) {
+    return `${shell} -lic "${joinedCommand}"`;
+  }
+  return `${shell} -c "${joinedCommand}"`;
 }
