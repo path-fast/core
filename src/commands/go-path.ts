@@ -15,21 +15,20 @@ export function goPath(command: string, option: Options): void {
   }
 
   const { path: targetPath, ideCommand } = entry;
-  const absoluteTargetPath = changeToHomeAndTarget(targetPath);
   
-  console.log(`Navigating to: ${absoluteTargetPath}`);
-  process.chdir(absoluteTargetPath);
+  console.log(`Navigating to: ${targetPath}`);
+  process.chdir(targetPath);
 
   const { command: ideCommandConfig } = readJsonFile('ide');
 
   const ideRunner = ideCommand || ideCommandConfig || 'code .';
 
   if (!option.code) {
-    exec(ideRunner, { cwd: absoluteTargetPath }, (err) => {
+    exec(ideRunner, { cwd: targetPath }, (err) => {
       if (err) {
-        console.error('Error opening VS Code:', err.message);
+        console.error(`Error opening IDE with command "${ideRunner}":`, err.message);
       } else {
-        console.log(`Opened ${absoluteTargetPath} in VS Code`);
+        console.log(`Opened ${targetPath} in IDE using command: ${ideRunner}`);
       }
     });
   } else {
@@ -37,7 +36,7 @@ export function goPath(command: string, option: Options): void {
   }
 
   if (!option.extra && entry.additional.length > 0) {
-    execAdditionalSequentially(entry.additional, absoluteTargetPath)
+    execAdditionalSequentially(entry.additional, targetPath)
       .then(() => {
         console.log('All additional commands completed.');
       })
@@ -49,17 +48,6 @@ export function goPath(command: string, option: Options): void {
   }
 }
 
-function changeToHomeAndTarget(targetPath: string): string {
-  const homeDir = os.homedir();
-  
-  // If path is already absolute, use it directly
-  if (path.isAbsolute(targetPath)) {
-    return targetPath;
-  }
-  
-  // For relative paths, resolve from home directory
-  return path.resolve(homeDir, targetPath);
-}
 
 async function execAdditionalSequentially(additionals: string[], targetPath: string): Promise<void> {
   for (const additional of additionals) {

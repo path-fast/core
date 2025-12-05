@@ -21,7 +21,6 @@ export function validatePathExists(projectPath: string): string {
   if (existsSync(resolvedFromHome)) {
     return resolvedFromHome;
   }
-  console.log(resolvedFromCwd, resolvedFromHome);
   throw new Error(`The path "${projectPath}" does not exist.`);
 }
 

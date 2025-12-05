@@ -95,7 +95,6 @@ function isPackageManagerInteractive(command: string): boolean {
 }
 
 export function getOptimalShell(): string {
-  // Try to get user's preferred shell from environment
   return process.env.SHELL || '/bin/bash';
 }
 
@@ -103,10 +102,8 @@ export function buildShellCommand(commandInfo: CommandInfo): string {
   const shell = getOptimalShell();
 
   if (commandInfo.requiresEnv) {
-    // Use interactive login shell to load full environment
     return `${shell} -lic "${commandInfo.command}"`;
   } else {
-    // Use non-interactive shell for simple commands
     return `${shell} -c "${commandInfo.command}"`;
   }
 }
