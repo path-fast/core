@@ -9,6 +9,7 @@ export interface PathEntry {
   path: string;
   command: string;
   additional: string[];
+  ideCommand: string | null;
 }
 
 export interface Options {

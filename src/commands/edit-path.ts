@@ -6,6 +6,8 @@ import type { PathEntry, PromptType } from '../@types/index.js';
 
 const regex = / /
 
+type EditItem = 'path' | 'command' | 'ideCommand';
+
 export async function editPath(input: string): Promise<void> {
   const data = readJsonFile('path');
 
@@ -18,7 +20,7 @@ export async function editPath(input: string): Promise<void> {
 
   let editing = true;
   const promptEdit = makePrompt('list', 'action', 'What would you like to edit?')
-  promptEdit.choices = ['Path', 'Command', 'Additional', 'Save & Exit', 'Cancel']
+  promptEdit.choices = ['Path', 'Command', 'IDE Command', 'Additional', 'Save & Exit', 'Cancel']
 
   const makeText = (name: string, context: string) => `Current ${name}: ${context}\nEnter new path (Type "exit" or leave blank to exit without editing.):`
 
@@ -35,6 +37,12 @@ export async function editPath(input: string): Promise<void> {
       case 'Command': {
         const promptCommand = makePrompt('input', 'edited', makeText('Command', targetEditing.command))
         await execEditCommun('command', promptCommand, targetEditing)
+        break;
+      }
+
+      case 'IDE Command': {
+        const ideCommand = makePrompt('input', 'edited', makeText('IDE Command', targetEditing.ideCommand || ''))
+        await execEditCommun('ideCommand', ideCommand, targetEditing)
         break;
       }
 
@@ -83,7 +91,7 @@ function callBackPath(): (edited: string) => string | false {
   }
 }
 
-async function execEditCommun(item: 'path' | 'command', pronpt: PromptType, target: PathEntry, callBack?: (edited: string) => string | false) {
+async function execEditCommun(item: EditItem, pronpt: PromptType, target: PathEntry, callBack?: (edited: string) => string | false) {
 
   const { edited } = await spawnPrompt(pronpt);
 

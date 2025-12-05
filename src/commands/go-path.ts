@@ -14,16 +14,18 @@ export function goPath(command: string, option: Options): void {
     return;
   }
 
-  const { path: targetPath } = entry;
+  const { path: targetPath, ideCommand } = entry;
   const absoluteTargetPath = changeToHomeAndTarget(targetPath);
   
   console.log(`Navigating to: ${absoluteTargetPath}`);
   process.chdir(absoluteTargetPath);
 
-  const ideConfig = readJsonFile('ide');
+  const { command: ideCommandConfig } = readJsonFile('ide');
+
+  const ideRunner = ideCommand || ideCommandConfig || 'code .';
 
   if (!option.code) {
-    exec(ideConfig.command, { cwd: absoluteTargetPath }, (err) => {
+    exec(ideRunner, { cwd: absoluteTargetPath }, (err) => {
       if (err) {
         console.error('Error opening VS Code:', err.message);
       } else {

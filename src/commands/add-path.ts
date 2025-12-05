@@ -15,9 +15,10 @@ export async function addPath(
     if (checkIfExistsInJson(data, absolutePath, command)) {
       return;
     }
-
+    const customIdeCommand = await makeCustomIdeCommand();
     const additionalParams = await makeAdditional()
-    data.push({ path: absolutePath, command, additional: additionalParams });
+
+    data.push({ path: absolutePath, command, additional: additionalParams, ideCommand: customIdeCommand});
 
     writeToJsonFile('path', data);
   } catch (error) {
@@ -50,4 +51,21 @@ async function makeAdditional(): Promise<string[]> {
   }
 
   return additionalParams
+}
+
+async function makeCustomIdeCommand(): Promise<string | null> {
+  const promptAnswers = makePrompt('confirm', 'customIde', 'Do you want to add a custom IDE command for this path?')
+  promptAnswers.default = false
+  const customIdeAnswers = await spawnPrompt(promptAnswers);
+
+  if(customIdeAnswers.customIde) {
+    const ideCommand = makePrompt('input', 'ideCommand', "Please provide the custom IDE command ex: 'code .'")
+    const additionalAnswer = await spawnPrompt(ideCommand);
+    const trimmedCommand = additionalAnswer.ideCommand.trim();
+    if(trimmedCommand.length > 0) {
+      return trimmedCommand
+    }
+  }
+
+  return null
 }

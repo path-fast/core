@@ -11,5 +11,5 @@ export const fileIde = resolve(configDir, 'ide-config.json');
 if (!fs.existsSync(configDir)) {
   fs.mkdirSync(configDir, { recursive: true });
 
-  writeToJsonFile('ide', { command: 'code' });
+  writeToJsonFile('ide', { command: 'code .' });
 }
