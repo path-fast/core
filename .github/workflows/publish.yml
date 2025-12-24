@@ -21,7 +21,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
 
       - name: Install dependencies
-        run: pnpm ci
+        run: |
+          npm install -g pnpm@latest
+          pnpm ci
 
       - name: Build project
         run: pnpm run build
