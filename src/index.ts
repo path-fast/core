@@ -19,29 +19,29 @@ program
 program
   .command('add <path> <command>')
   .description('Add a project path with a shortcut')
-  .action(addPath); // Check
+  .action(addPath);
   
 program
   .command('go <command>')
   .option('-c , --code', 'Do not execute "code ." command')
   .option('-e , --extra', 'Do not execute additional commands')
   .description('Navigate to the project path, open it in VS Code, and run your custom commands.')
-  .action(goPath);// Check
+  .action(goPath);
 
 program
   .command('list')
   .description('List all registered paths')
-  .action(listPaths); // Check
+  .action(listPaths); 
 
 program
   .command('delete <command>')
   .description('Delete a path by its command (shortcut)')
-  .action(deletePath); // Check
+  .action(deletePath); 
 
 program
   .command('edit <command>')
   .description('Edit your shortcut')
-  .action(editPath); // Check
+  .action(editPath); 
 
 program
   .command('set-ide')
