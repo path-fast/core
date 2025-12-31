@@ -179,7 +179,7 @@ This project is licensed under the MIT License.
 
 ## Contributing 🤝
 
-Contributions are welcome! 🎉 Feel free to open an issue 🐛 or submit a pull request 📬 to the [GitHub repository](https://github.com/eduardonicola/path-fast).
+Contributions are welcome! 🎉 Feel free to open an issue 🐛 or submit a pull request 📬 to the [GitHub repository](https://github.com/path-fast/core).
 
 ---
 
