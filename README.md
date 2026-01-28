@@ -4,7 +4,7 @@
 ![npm version](https://img.shields.io/npm/v/path-fast)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
-**Path-Fast** is a CLI tool 🛠️ that simplifies project navigation by allowing you to save and manage frequently used paths with custom aliases and shortcuts. Whether you want to open a project quickly in VS Code or run setup scripts automatically, Path-Fast makes it fast and effortless.
+**Path-Fast** is a CLI tool 🛠️ that simplifies project navigation by letting you save paths with a shortcut (alias/command), open them in your IDE, and optionally run extra commands. Perfect for jumping into projects and bootstrapping your environment fast.
 
 
 ---
@@ -12,7 +12,7 @@
 ## Features ✨
 
 - **Save paths with aliases** 📌: Quickly store paths and associate them with a custom alias.
-- **Navigate and open projects** 📂➡️💻: Use shortcuts to navigate to paths and open them in VS Code.
+- **Navigate and open projects** 📂➡️💻: Use shortcuts to navigate to paths and open them in your IDE.
 - **Support for additional commands** 🎛️: Execute predefined commands when navigating to a path.
 - **Interactive editing** ✍️: Modify paths, commands, or additional parameters through a simple interactive interface.
 - **Global installation** 🌐: Available from anywhere in your terminal.
@@ -21,7 +21,7 @@
 
 ## Installation 🔧
 
-Install **Path-Fast** globally using npm:
+Install **Path-Fast** globally using npm or yorur preferred package manager:
 
 ```bash
 npm install -g path-fast
@@ -31,51 +31,58 @@ npm install -g path-fast
 
 ## Usage 📝
 
+### Commands Overview
+
+- `pf add <path> <command>`: Save a project path with a shortcut.
+- `pf go <command>`: Navigate to a saved path, open in your IDE, and run extras.
+   - Options:
+      - `-c, --code`: Skip opening the IDE command.
+      - `-e, --extra`: Skip executing additional commands.
+- `pf list`: Show all saved entries.
+- `pf edit <command or index>`: Interactively edit a saved entry.
+- `pf delete <command>`: Delete an entry by its shortcut.
+- `pf set-ide`: Set a global default IDE command (e.g., `code .`).
+
 ### Add a Path ➕
 
-Save a project path with a custom alias:
+Save a project path with a custom shortcut (alias/command):
 
 ```bash
-pf add <path> <alias>
+pf add <path> <command>
 ```
 
-- `path` 📂: The relative or absolute path to the project. Use `.` to refer to the current directory.
-- `alias` 🧩: The alias you want to use for this path.
-- Example:
-  ```bash
-  pf add /my-project myproj
-  ```
-  Or to add the current directory:
-  ```bash
-  pf add . currentdir
-  ```
+- `path` 📂: Absolute or relative. Use `.` for the current directory.
+- `command` 🧩: Your shortcut name (e.g., `app`, `api`, `work`).
 
-**Optional Parameter:**
+Examples:
 
-When adding a path, you will be prompted to add additional commands 💬 that will run whenever the alias is used.
+```bash
+pf add /my-project app
+pf add . currentdir
+```
+
+During `pf add`, you can:
+- Add a custom IDE command for this specific path (e.g., `cursor .`, `idea .`, `cursor .`).
+- Add one or more additional commands that will run when using `pf go <command>`.
 
 ### Navigate to a Path 🏃‍♂️
 
-Navigate to a saved path and open it in VS Code:
+Go to a saved path, open it in your IDE, and optionally run extra commands:
 
 ```bash
-pf go <alias> [-e or --extra]
+pf go <command> [--code] [--extra]
 ```
 
-- `alias` 🧩: The alias of the path you want to navigate to.
-- `-e --extra` 🚫: Skip executing additional commands associated with the path.
-- Example:
-  ```bash
-  pf go myproj
-  pf go myproj --extra
-  ```
+- `--code` 🚫: Skip the IDE opening step (per-path or global). 
+- `--extra` 🚫: Skip executing additional commands.
 
-- `-c --code` 🚫: Skip executing 'code .' alias associated with the path.
-- Example:
-  ```bash
-  pf go myproj
-  pf go myproj --code
-  ```
+Examples:
+
+```bash
+pf go app
+pf go app --extra     # don’t run additionals
+pf go app --code      # don’t open IDE
+```
 
 ### List All Saved Paths 📜
 
@@ -87,65 +94,79 @@ pf list
 
 ### Edit a Saved Path ✍️
 
-Interactively edit a saved path:
+Interactively edit fields for an entry:
 
 ```bash
-pf edit <alias or index>
+pf edit <command or index>
 ```
 
-- `alias` 🧩: The alias of the path you want to edit.
-- `index` 🔢: The numeric index of the saved path (use `pf list` to find it).
-- ⚠️ Note: `exit` is a reserved word and cannot be used as an alias
+- Supports editing: Path, Command (alias), IDE Command, Additional commands.
+- Use `pf list` first if you prefer editing by index (shown in the table output).
+- ⚠️ `exit` is reserved in prompts and cannot be used as a command.
 ### Delete a Path ❌
 
-Remove a saved path by its alias or index:
+Delete a saved entry by its shortcut (command):
 
 ```bash
-pf delete <alias or index>
+pf delete <command>
 ```
 
 ---
 
 ## Examples 🛠️
 
-1. Add a project path and alias:
-   ```bash
-   pf add /my-app app
-   ```
+1) Save a project and add extras interactively:
 
-2. Add the current directory as a project path:
-   ```bash
-   pf add . currentdir
-   ```
+```bash
+pf add /srv/api api
+# Answer prompts to add IDE command for this path (optional)
+# and additional commands (e.g., "pnpm install", "pnpm dev").
+```
 
-3. Navigate to the saved path and open it in VS Code:
-   ```bash
-   pf go app
-   ```
-4. Navigate to a saved path without opening it in VS Code:
-   ```bash
-   pf go app --code
-   ```
+2) Global IDE setting (used when an entry doesn’t have its own):
 
-5. Edit a saved path:
-   ```bash
-   pf edit app
-   ```
+```bash
+pf set-ide
+# When prompted, enter something like: code .
+# Other examples: cursor . | idea . | subl .
+```
 
-6. Delete a saved path:
-   ```bash
-   pf delete app
-   ```
-7. List all saved paths:
-   ```bash
-   pf list
-   ```
+3) Open the project and run extras:
+
+```bash
+pf go api
+pf go api --extra   # skip extras
+pf go api --code    # skip opening IDE
+```
+
+4) Edit fields interactively:
+
+```bash
+pf edit api
+pf list   # see index numbers
+pf edit 0 # edit by index
+```
+
+5) Remove an entry:
+
+```bash
+pf delete api
+```
 
 ---
 
 ## Configuration ⚙️
 
-**Path-Fast** saves paths in a JSON file 📄 located in your home directory under `.path-fast/dist/paths.json`. You can back up or manually edit this file if needed.
+Files are stored in your home directory:
+
+- `~/.path-fast/paths.json` — saved paths and commands
+- `~/.path-fast/ide-config.json` — global IDE command
+
+IDE command precedence when running `pf go <command>`:
+
+1. Per-entry IDE command (set during `pf add` or via `pf edit`).
+2. Global IDE command (`pf set-ide`).
+3. Fallback `code .`.
 
 ---
 
@@ -158,7 +179,7 @@ This project is licensed under the MIT License.
 
 ## Contributing 🤝
 
-Contributions are welcome! 🎉 Feel free to open an issue 🐛 or submit a pull request 📬 to the [GitHub repository](https://github.com/eduardonicola/path-fast).
+Contributions are welcome! 🎉 Feel free to open an issue 🐛 or submit a pull request 📬 to the [GitHub repository](https://github.com/path-fast/core).
 
 ---
 

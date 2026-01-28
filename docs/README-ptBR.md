@@ -4,7 +4,7 @@
 ![npm version](https://img.shields.io/npm/v/path-fast)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
-**Path-Fast** é uma ferramenta CLI 🛠️ que simplifica a navegação em projetos permitindo que você salve e gerencie caminhos usados frequentemente com aliases e atalhos personalizados. Seja para abrir um projeto rapidamente no VS Code ou executar scripts de configuração automaticamente, o Path-Fast torna tudo rápido e fácil.
+**Path-Fast** é uma ferramenta CLI 🛠️ para salvar caminhos com um atalho (alias/comando), abrir no seu IDE e opcionalmente executar comandos extras. Ideal para entrar em projetos e preparar o ambiente rapidamente.
 
 ---
 
@@ -20,7 +20,7 @@
 
 ## Instalação 🔧
 
-Instale o **Path-Fast** globalmente usando npm:
+Instale o **Path-Fast** globalmente usando npm ou seu gerenciador de pacotes preferido:
 
 ```bash
 npm install -g path-fast
@@ -30,54 +30,57 @@ npm install -g path-fast
 
 ## Uso 📝
 
+### Visão Geral dos Comandos
+
+- `pf add <caminho> <comando>`: Salva um caminho com um atalho.
+- `pf go <comando>`: Navega até o caminho, abre no IDE e executa extras.
+	- Opções:
+		- `-c, --code`: Pular a abertura do IDE.
+		- `-e, --extra`: Pular a execução dos comandos adicionais.
+- `pf list`: Lista todas as entradas salvas.
+- `pf edit <comando ou índice>`: Edita uma entrada de forma interativa.
+- `pf delete <comando>`: Remove uma entrada pelo seu atalho.
+- `pf set-ide`: Define um comando de IDE global (ex.: `code .`).
+
 ### Adicionar um Caminho ➕
 
-Salve o caminho de um projeto com um alias personalizado:
+Salve um caminho com um atalho (alias/comando):
 
 ```bash
-pf add <caminho> <alias>
+pf add <caminho> <comando>
 ```
 
-- `caminho` 📂: Caminho relativo ou absoluto para o projeto. Use `.` para se referir ao diretório atual.
-- `alias` 🧩: O alias que você deseja usar para este caminho.
+- `caminho` 📂: Absoluto ou relativo. Use `.` para o diretório atual.
+- `comando` 🧩: O nome do atalho (ex.: `app`, `api`, `trabalho`).
 
-Exemplo:
-```bash
-pf add /meu-projeto meualias
-```
+Exemplos:
 
-Ou para adicionar o diretório atual:
 ```bash
+pf add /meu-projeto app
 pf add . diretorioatual
 ```
 
-**Parâmetro Opcional:**
-
-Ao adicionar um caminho, você será solicitado a adicionar comandos adicionais 💬 que serão executados sempre que o alias for usado.
+Durante o `pf add`, você pode:
+- Adicionar um comando de IDE personalizado para este caminho (ex.: `cursor .`, `idea .`, `cursor .`).
+- Adicionar um ou mais comandos adicionais para executar com `pf go <comando>`.
 
 ### Navegar para um Caminho 🏃‍♂️
 
-Navegue para um caminho salvo e abra no VS Code:
+Vá até um caminho salvo, abra no IDE e execute (ou não) comandos extras:
 
 ```bash
-pf go <alias> [-e ou --extra]
+pf go <comando> [--code] [--extra]
 ```
 
-- `alias` 🧩: O alias do caminho para onde deseja navegar.
-- `-e --extra` 🚫: Ignorar a execução dos comandos adicionais associados ao caminho.
+- `--code` 🚫: Pula a abertura do IDE (seja por entrada ou global).
+- `--extra` 🚫: Pula a execução dos comandos adicionais.
 
-Exemplo:
+Exemplos:
+
 ```bash
-pf go meualias
-pf go meualias --extra
-```
-
-- `-c --code` 🚫: Ignorar a execução do comando 'code .' associado ao caminho.
-
-Exemplo:
-```bash
-pf go meualias
-pf go meualias --code
+pf go app
+pf go app --extra   # não executa extras
+pf go app --code    # não abre o IDE
 ```
 
 ### Listar Todos os Caminhos Salvos 📜
@@ -90,81 +93,80 @@ pf list
 
 ### Editar um Caminho Salvo ✍️
 
-Edite interativamente um caminho salvo:
+Edite campos de uma entrada de forma interativa:
 
 ```bash
-pf edit <alias ou índice>
+pf edit <comando ou índice>
 ```
 
-- `alias` 🧩: O alias do caminho que deseja editar.
-- `índice` 🔢: O índice numérico do caminho salvo (use `pf list` para encontrar).
-- ⚠️ Nota: `exit` é uma palavra reservada e não pode ser usada como alias.
+- É possível editar: Caminho, Comando (alias), Comando de IDE, Comandos adicionais.
+- Use `pf list` para visualizar índices (mostrados na tabela) e editar por índice.
+- ⚠️ `exit` é reservado nos prompts e não pode ser usado como comando.
 
 ### Deletar um Caminho ❌
 
-Remova um caminho salvo pelo alias ou índice:
+Remova uma entrada pelo seu atalho (comando):
 
 ```bash
-pf delete <alias ou índice>
+pf delete <comando>
 ```
 
 ---
 
 ## Exemplos 🛠️
 
-1. Adicionar um caminho de projeto e alias:
+1) Salvar projeto e adicionar extras interativamente:
 
 ```bash
-pf add /meu-app app
+pf add /srv/api api
+# Responda aos prompts para adicionar comando de IDE (opcional)
+# e comandos adicionais (ex.: "pnpm install", "pnpm dev").
 ```
 
-2. Adicionar o diretório atual como caminho de projeto:
+2) IDE global (usado quando a entrada não tem um próprio):
 
 ```bash
-pf add . diretorioatual
+pf set-ide
+# Quando solicitado, informe algo como: code .
+# Outros exemplos: cursor . | idea . | subl .
 ```
 
-3. Navegar até o caminho salvo e abrir no VS Code:
+3) Abrir projeto e executar extras:
 
 ```bash
-pf go app
+pf go api
+pf go api --extra   # pular extras
+pf go api --code    # pular IDE
 ```
 
-4. Navegar até um caminho salvo sem abrir no VS Code:
+4) Editar campos:
 
 ```bash
-pf go app --code
+pf edit api
+pf list   # ver índices
+pf edit 0 # editar por índice
 ```
 
-5. Editar um caminho salvo:
+5) Remover uma entrada:
 
 ```bash
-pf edit app
-```
-
-6. Deletar um caminho salvo:
-
-```bash
-pf delete app
-```
-
-7. Listar todos os caminhos salvos:
-
-```bash
-pf list
+pf delete api
 ```
 
 ---
 
 ## Configuração ⚙️
 
-O **Path-Fast** salva os caminhos em um arquivo JSON 📄 localizado no seu diretório home, dentro de:
+Arquivos no diretório home:
 
-```bash
-~/.path-fast/dist/paths.json
-```
+- `~/.path-fast/paths.json` — caminhos salvos e comandos
+- `~/.path-fast/ide-config.json` — comando de IDE global
 
-Você pode fazer backup ou editar esse arquivo manualmente se desejar.
+Precedência do comando de IDE ao executar `pf go <comando>`:
+
+1. Comando de IDE da entrada (definido no `pf add` ou `pf edit`).
+2. Comando de IDE global (`pf set-ide`).
+3. Padrão `code .`.
 
 ---
 
@@ -176,7 +178,7 @@ Este projeto está licenciado sob a licença MIT.
 
 ## Contribuindo 🤝
 
-Contribuições são bem-vindas! 🎉 Sinta-se à vontade para abrir uma issue 🐛 ou enviar um pull request 📬 para o [repositório GitHub](https://github.com/eduardonicola/path-fast).
+Contribuições são bem-vindas! 🎉 Sinta-se à vontade para abrir uma issue 🐛 ou enviar um pull request 📬 para o [repositório GitHub](https://github.com/path-fast/core).
 
 ---
 
