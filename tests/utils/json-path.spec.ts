@@ -15,6 +15,7 @@ jest.mock('path', () => ({
 jest.mock('fs', () => ({
   existsSync: jest.fn(),
   mkdirSync: jest.fn(),
+  writeFileSync: jest.fn(),
 }));
 
 // Import the mocked modules

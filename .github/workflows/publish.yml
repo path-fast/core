@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - master
+    pull_request:
+    branches:
+      - master
 
 jobs:
-  publish:
+  testing:
     runs-on: ubuntu-latest
-    environment: prod
 
     steps:
       - name: Checkout code
@@ -18,12 +20,39 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          registry-url: 'https://registry.npmjs.org/'
+          cache: "pnpm"
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.19.0
+          version: 10.26.2
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests (CI)
+        run: pnpm test:ci
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: testing
+    environment: prod
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: "https://registry.npmjs.org/"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.26.2
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

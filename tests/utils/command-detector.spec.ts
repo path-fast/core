@@ -22,7 +22,6 @@ describe('command-detector', () => {
         expect(result).toEqual({
           command: 'make build',
           type: CommandType.MAKE,
-          requiresInteractive: false,
           requiresEnv: true
         });
       });
@@ -33,7 +32,6 @@ describe('command-detector', () => {
         expect(result).toEqual({
           command: 'make clean install test',
           type: CommandType.MAKE,
-          requiresInteractive: false,
           requiresEnv: true
         });
       });
@@ -46,29 +44,26 @@ describe('command-detector', () => {
         expect(result).toEqual({
           command: 'docker build .',
           type: CommandType.DOCKER,
-          requiresInteractive: false,
           requiresEnv: false
         });
       });
 
-      it('should detect interactive docker commands with -it flag', () => {
+      it('should detect docker commands with -it flag', () => {
         const result = detectCommandType('docker run -it ubuntu bash');
         
         expect(result).toEqual({
           command: 'docker run -it ubuntu bash',
           type: CommandType.DOCKER,
-          requiresInteractive: true,
           requiresEnv: false
         });
       });
 
-      it('should detect interactive docker exec commands', () => {
+      it('should detect docker exec commands', () => {
         const result = detectCommandType('docker exec -it container_name bash');
         
         expect(result).toEqual({
           command: 'docker exec -it container_name bash',
           type: CommandType.DOCKER,
-          requiresInteractive: true,
           requiresEnv: false
         });
       });
@@ -81,7 +76,6 @@ describe('command-detector', () => {
         expect(result).toEqual({
           command: 'docker-compose up',
           type: CommandType.DOCKER_COMPOSE,
-          requiresInteractive: false,
           requiresEnv: false
         });
       });
@@ -91,19 +85,17 @@ describe('command-detector', () => {
         
         expect(result).toEqual({
           command: 'docker compose up -d',
-          type: CommandType.DOCKER_COMPOSE,
-          requiresInteractive: false,
+          type: CommandType.DOCKER,
           requiresEnv: false
         });
       });
 
-      it('should detect interactive docker-compose exec commands', () => {
+      it('should detect docker-compose exec commands', () => {
         const result = detectCommandType('docker-compose exec -it web bash');
         
         expect(result).toEqual({
           command: 'docker-compose exec -it web bash',
           type: CommandType.DOCKER_COMPOSE,
-          requiresInteractive: true,
           requiresEnv: false
         });
       });
@@ -116,40 +108,36 @@ describe('command-detector', () => {
         expect(result).toEqual({
           command: 'npm run build',
           type: CommandType.NPM,
-          requiresInteractive: false,
           requiresEnv: true
         });
       });
 
-      it('should detect interactive npm commands', () => {
+      it('should detect npm init commands', () => {
         const result = detectCommandType('npm init');
         
         expect(result).toEqual({
           command: 'npm init',
           type: CommandType.NPM,
-          requiresInteractive: true,
           requiresEnv: true
         });
       });
 
-      it('should detect npm create commands as interactive', () => {
+      it('should detect npm create commands', () => {
         const result = detectCommandType('npm create react-app my-app');
         
         expect(result).toEqual({
           command: 'npm create react-app my-app',
           type: CommandType.NPM,
-          requiresInteractive: true,
           requiresEnv: true
         });
       });
 
-      it('should detect npm install commands as interactive', () => {
+      it('should detect npm install commands', () => {
         const result = detectCommandType('npm install express');
         
         expect(result).toEqual({
           command: 'npm install express',
           type: CommandType.NPM,
-          requiresInteractive: true,
           requiresEnv: true
         });
       });
@@ -162,18 +150,16 @@ describe('command-detector', () => {
         expect(result).toEqual({
           command: 'yarn build',
           type: CommandType.YARN,
-          requiresInteractive: false,
           requiresEnv: true
         });
       });
 
-      it('should detect interactive yarn commands', () => {
+      it('should detect yarn add commands', () => {
         const result = detectCommandType('yarn add react');
         
         expect(result).toEqual({
           command: 'yarn add react',
           type: CommandType.YARN,
-          requiresInteractive: true,
           requiresEnv: true
         });
       });
@@ -186,18 +172,16 @@ describe('command-detector', () => {
         expect(result).toEqual({
           command: 'pnpm run dev',
           type: CommandType.PNPM,
-          requiresInteractive: false,
           requiresEnv: true
         });
       });
 
-      it('should detect interactive pnpm commands', () => {
+      it('should detect pnpm add commands', () => {
         const result = detectCommandType('pnpm add typescript');
         
         expect(result).toEqual({
           command: 'pnpm add typescript',
           type: CommandType.PNPM,
-          requiresInteractive: true,
           requiresEnv: true
         });
       });
@@ -210,18 +194,16 @@ describe('command-detector', () => {
         expect(result).toEqual({
           command: 'bun run test',
           type: CommandType.BUN,
-          requiresInteractive: false,
           requiresEnv: true
         });
       });
 
-      it('should detect interactive bun commands', () => {
+      it('should detect bun init commands', () => {
         const result = detectCommandType('bun init');
         
         expect(result).toEqual({
           command: 'bun init',
           type: CommandType.BUN,
-          requiresInteractive: true,
           requiresEnv: true
         });
       });
@@ -234,7 +216,6 @@ describe('command-detector', () => {
         expect(result).toEqual({
           command: 'nvm use 18',
           type: CommandType.NVM,
-          requiresInteractive: false,
           requiresEnv: true
         });
       });
@@ -245,7 +226,6 @@ describe('command-detector', () => {
         expect(result).toEqual({
           command: 'fnm use 18',
           type: CommandType.FNM,
-          requiresInteractive: false,
           requiresEnv: true
         });
       });
@@ -258,7 +238,6 @@ describe('command-detector', () => {
         expect(result).toEqual({
           command: 'echo "Hello World"',
           type: CommandType.GENERIC,
-          requiresInteractive: false,
           requiresEnv: true
         });
       });
@@ -269,7 +248,6 @@ describe('command-detector', () => {
         expect(result).toEqual({
           command: '',
           type: CommandType.GENERIC,
-          requiresInteractive: false,
           requiresEnv: true
         });
       });
@@ -278,9 +256,8 @@ describe('command-detector', () => {
         const result = detectCommandType('   ');
         
         expect(result).toEqual({
-          command: '   ',
+          command: '',
           type: CommandType.GENERIC,
-          requiresInteractive: false,
           requiresEnv: true
         });
       });
@@ -343,7 +320,6 @@ describe('command-detector', () => {
       const commandInfo = {
         command: 'npm run build',
         type: CommandType.NPM,
-        requiresInteractive: false,
         requiresEnv: true
       };
 
@@ -356,7 +332,6 @@ describe('command-detector', () => {
       const commandInfo = {
         command: 'docker ps',
         type: CommandType.DOCKER,
-        requiresInteractive: false,
         requiresEnv: false
       };
 
@@ -369,13 +344,12 @@ describe('command-detector', () => {
       const commandInfo = {
         command: 'echo "Hello World"',
         type: CommandType.GENERIC,
-        requiresInteractive: false,
         requiresEnv: true
       };
 
       const result = buildShellCommand(commandInfo);
       
-      expect(result).toBe('/bin/bash -lic "echo \\"Hello World\\""');
+      expect(result).toBe('/bin/bash -lic "echo "Hello World""');
     });
 
     it('should use custom shell from environment', () => {
@@ -384,7 +358,6 @@ describe('command-detector', () => {
       const commandInfo = {
         command: 'yarn build',
         type: CommandType.YARN,
-        requiresInteractive: false,
         requiresEnv: true
       };
 

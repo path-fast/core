@@ -15,6 +15,7 @@ export function createMockPathEntry(overrides: Partial<PathEntry> = {}): PathEnt
     path: '/mock/path/to/project',
     command: 'mockCommand',
     additional: [],
+    ideCommand: 'mockIDECommand',
     ...overrides,
   };
 }
@@ -128,16 +129,10 @@ export class ConsoleCapture {
   }
 }
 
-/**
- * Creates a temporary directory path for testing
- */
+
 export function getTempPath(suffix: string = ''): string {
   return path.join(os.tmpdir(), 'path-fast-test', suffix);
 }
-
-/**
- * Normalizes path for cross-platform testing
- */
 export function normalizePath(filePath: string): string {
   return path.resolve(filePath.split('/').join(path.sep));
 }

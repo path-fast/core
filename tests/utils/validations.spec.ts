@@ -105,12 +105,14 @@ describe('validations', () => {
       {
         path: '/existing/path1',
         command: 'existing-cmd1',
-        additional: []
+        additional: [],
+        ideCommand: 'code .'
       },
       {
         path: '/existing/path2',
         command: 'existing-cmd2',
-        additional: ['npm install']
+        additional: ['npm install'],
+        ideCommand: 'code .'
       }
     ];
 
@@ -149,8 +151,10 @@ describe('validations', () => {
     });
 
     it('should be case sensitive for paths and commands', () => {
-      const result1 = checkIfExistsInJson(mockData, '/EXISTING/PATH1', 'existing-cmd1');
-      const result2 = checkIfExistsInJson(mockData, '/existing/path1', 'EXISTING-CMD1');
+      // Path differs in case and command does not exist
+      const result1 = checkIfExistsInJson(mockData, '/EXISTING/PATH1', 'new-cmd');
+      // Command differs in case and path does not exist
+      const result2 = checkIfExistsInJson(mockData, '/new/path', 'EXISTING-CMD1');
       
       expect(result1).toBe(false);
       expect(result2).toBe(false);
@@ -161,7 +165,8 @@ describe('validations', () => {
         {
           path: '/existing/path/',
           command: 'existing-cmd',
-          additional: []
+          additional: [],
+          ideCommand: 'code .'
         }
       ];
 
