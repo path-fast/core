@@ -145,7 +145,8 @@ describe('write-read-json', () => {
         {
           path: '/test/path',
           command: 'test-cmd',
-          additional: ['cmd1', 'cmd2']
+          additional: ['cmd1', 'cmd2'],
+          ideCommand: 'code .'
         }
       ];
 
@@ -164,7 +165,8 @@ describe('write-read-json', () => {
         {
           path: '/path/with spaces/and-special_chars',
           command: 'cmd-with_special.chars',
-          additional: ['echo "hello world"', 'npm run test:watch']
+          additional: ['echo "hello world"', 'npm run test:watch'],
+          ideCommand: 'code .'
         }
       ];
 
