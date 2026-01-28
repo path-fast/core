@@ -18,7 +18,7 @@ on:
   workflow_call:
 
 jobs:
-  tests:
+  test-ci-pnpm:
     runs-on: ubuntu-latest
 
     steps:
