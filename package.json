@@ -19,8 +19,8 @@
     "dev:pf": "node dist/index.js",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:ci": "jest --ci --coverage --watchAll=false",
+    "test:coverage": "jest --ci --coverage",
+    "test:ci": "jest --ci --watchAll=false",
     "new:version": "npm version patch -m 'release: %s' && git push && git push --tags"
   },
   "repository": {
