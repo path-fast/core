@@ -42,3 +42,10 @@ export enum CommandType {
   FNM = 'fnm',
   GENERIC = 'generic'
 }
+
+export interface OptionStep {
+  shouldRun: () => boolean;
+  execute: () => Promise<void>;
+  skipMessage: string;
+  errorMessage: string;
+}
