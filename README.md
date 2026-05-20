@@ -3,7 +3,7 @@
 
 ![npm version](https://img.shields.io/npm/v/path-fast)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
-![CI Tests](https://github.com/path-fast/core/actions/workflows/tests.yml/badge.svg)
+![CI Tests](https://img.shields.io/github/actions/workflow/status/path-fast/core/publish.yml?branch=master&label=CI%20Tests)
 
 **Path-Fast** is a CLI tool 🛠️ that simplifies project navigation by letting you save paths with a shortcut (alias/command), open them in your IDE, and optionally run extra commands. Perfect for jumping into projects and bootstrapping your environment fast.
 
