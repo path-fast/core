@@ -3,6 +3,7 @@
 
 ![npm version](https://img.shields.io/npm/v/path-fast)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+![CI Tests](https://github.com/path-fast/core/actions/workflows/tests.yml/badge.svg)
 
 **Path-Fast** é uma ferramenta CLI 🛠️ para salvar caminhos com um atalho (alias/comando), abrir no seu IDE e opcionalmente executar comandos extras. Ideal para entrar em projetos e preparar o ambiente rapidamente.
 
@@ -33,14 +34,23 @@ npm install -g path-fast
 ### Visão Geral dos Comandos
 
 - `pf add <caminho> <comando>`: Salva um caminho com um atalho.
+  - `--ide <comando>`: IDE customizado (pula prompts).
+  - `--extra <comando>`: Comando adicional, repetível.
+  - `--json`: Saída JSON.
 - `pf go <comando>`: Navega até o caminho, abre no IDE e executa extras.
-	- Opções:
-		- `-c, --code`: Pular a abertura do IDE.
-		- `-e, --extra`: Pular a execução dos comandos adicionais.
-- `pf list`: Lista todas as entradas salvas.
-- `pf edit <comando ou índice>`: Edita uma entrada de forma interativa.
-- `pf delete <comando>`: Remove uma entrada pelo seu atalho.
-- `pf set-ide`: Define um comando de IDE global (ex.: `code .`).
+  - `-c, --code`: Pular a abertura do IDE.
+  - `-e, --extra`: Pular comandos adicionais.
+  - `--dry-run`: Simular sem efeitos colaterais.
+  - `--json`: Saída JSON (com `--dry-run`).
+- `pf list`: Lista entradas (`--json`).
+- `pf export`: Exporta config (`--json`, `-o <arquivo>`).
+- `pf import <arquivo>`: Importa após validação (`--json`).
+- `pf doctor`: Diagnóstico de config/ambiente (`--json`).
+- `pf edit <comando ou índice>`: Edita interativamente.
+- `pf delete <comando>`: Remove entrada.
+- `pf set-ide`: IDE global (ex.: `code .`).
+
+> `pf validate` está previsto para v0.2. Veja [JSON-SCHEMA.md](JSON-SCHEMA.md).
 
 ### Adicionar um Caminho ➕
 
@@ -58,9 +68,10 @@ Exemplos:
 ```bash
 pf add /meu-projeto app
 pf add . diretorioatual
+pf add . api --ide "cursor ." --extra "make up" --extra "npm run dev"
 ```
 
-Durante o `pf add`, você pode:
+Durante o `pf add` (sem flags), você pode:
 - Adicionar um comando de IDE personalizado para este caminho (ex.: `cursor .`, `idea .`, `cursor .`).
 - Adicionar um ou mais comandos adicionais para executar com `pf go <comando>`.
 
@@ -81,6 +92,11 @@ Exemplos:
 pf go app
 pf go app --extra   # não executa extras
 pf go app --code    # não abre o IDE
+pf go app --dry-run # apenas simula
+pf list --json
+pf doctor
+pf export -o backup.json
+pf import backup.json
 ```
 
 ### Listar Todos os Caminhos Salvos 📜

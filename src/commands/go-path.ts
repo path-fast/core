@@ -1,74 +1,100 @@
-
 import { exec, spawn } from 'child_process';
-import { readJsonFile } from '../utils/write-read-json.js';
 import { detectCommandType, buildShellCommand } from '../utils/command-detector.js';
-import type { CommandInfo, Options } from '../@types/index.js';
+import { printJson, printJsonError, successEnvelope, exitWithCode } from '../utils/output.js';
+import { buildGoPlan, printGoPlanHuman } from './go-plan.js';
+import type { CommandInfo, GoPlan, Options, OptionStep } from '../@types/index.js';
 
-export function goPath(command: string, option: Options): void {
-  const data = readJsonFile('path')
-  const entry = data.find(item => item.command === command);
+export async function goPath(command: string, option: Options = {}): Promise<void> {
+  const plan = buildGoPlan(command, option);
 
-  if (!entry) {
+  if (!plan) {
+    if (option.json) {
+      printJsonError(`No path found for command "${command}"`, 'command');
+      exitWithCode(1);
+    }
     console.error(`No path found for command "${command}"`);
+    process.exit(1);
+  }
+
+  if (option.dryRun) {
+    if (option.json) {
+      printJson(successEnvelope({ plan }));
+      return;
+    }
+    printGoPlanHuman(plan);
     return;
   }
 
-  const { path: targetPath, ideCommand } = entry;
-  
-  console.log(`Navigating to: ${targetPath}`);
-  process.chdir(targetPath);
+  console.log(`Navigating to: ${plan.targetPath}`);
+  process.chdir(plan.targetPath);
 
-  const { command: ideCommandConfig } = readJsonFile('ide');
+  const optionSteps: OptionStep[] = [
+    {
+      shouldRun: () => !option.code,
+      execute: () => runIdeCommand(plan.ideCommand, plan.targetPath),
+      skipMessage: 'Skipped the "code ." command',
+      errorMessage: 'Error opening IDE command:',
+    },
+    {
+      shouldRun: () => !option.extra && plan.additional.length > 0,
+      execute: () => runAdditionalCommands(plan.additional, plan.targetPath),
+      skipMessage: 'Skipped the additional commands',
+      errorMessage: 'Error executing additional commands:',
+    },
+  ];
 
-  const ideRunner = ideCommand || ideCommandConfig || 'code .';
+  await runOptionStepsSequentially(optionSteps);
+}
 
-  if (!option.code) {
-  exec(ideRunner, { cwd: targetPath }, (err) => {
-      if (err) {
-        console.error(`Error opening IDE with command "${ideRunner}":`, err.message);
-      } else {
-        console.log(`Opened ${targetPath} in IDE using command: ${ideRunner}`);
-      }
-    });
-  } else {
-    console.log('Skipped the "code ." command')
-  }
+async function runOptionStepsSequentially(steps: OptionStep[]): Promise<void> {
+  for (const step of steps) {
+    if (!step.shouldRun()) {
+      console.log(step.skipMessage);
+      continue;
+    }
 
-  if (!option.extra && entry.additional.length > 0) {
-    execAdditionalSequentially(entry.additional, targetPath)
-      .then(() => {
-        console.log('All additional commands completed.');
-      })
-      .catch((error) => {
-        console.error('Error executing additional commands:', error);
-      });
-  } else {
-    console.log('Skipped the additional commands')
+    try {
+      await step.execute();
+    } catch (error) {
+      console.error(step.errorMessage, error);
+    }
   }
 }
 
+async function runIdeCommand(ideRunner: string, targetPath: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    exec(ideRunner, { cwd: targetPath }, (err) => {
+      if (err) {
+        reject(new Error(`Error opening IDE with command "${ideRunner}": ${err.message}`));
+        return;
+      }
 
-async function execAdditionalSequentially(additionals: string[], targetPath: string): Promise<void> {
+      console.log(`Opened ${targetPath} in IDE using command: ${ideRunner}`);
+      resolve();
+    });
+  });
+}
+
+async function runAdditionalCommands(additionals: string[], targetPath: string): Promise<void> {
   const commandInfos = additionals.map(cmd => detectCommandType(cmd));
-  
+
   console.log(`\n🚀 Executing ${commandInfos.length} commands in batch mode:`);
   additionals.forEach((cmd, i) => console.log(`   ${i + 1}. ${cmd}`));
-  console.log('');
   await executeBatchCommand(commandInfos, targetPath);
+  console.log('All additional commands completed.');
 }
 
 function executeBatchCommand(commandInfos: CommandInfo[], cwd: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const shellCommand = buildShellCommand(commandInfos);
-    
+
     console.log(`📦 Batching commands with shared shell context`,);
     const options = {
       cwd,
       shell: true,
       stdio: 'pipe'
-    } as any;
+    } as Parameters<typeof spawn>[2];
 
-    
     const childProcess = spawn(shellCommand, options);
 
     if (childProcess.stdout) {

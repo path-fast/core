@@ -44,7 +44,7 @@ describe('write-read-json', () => {
       expect(result).toEqual(mockData);
     });
 
-    it('should return empty array when file does not exist', () => {
+    it('should return empty array when path file does not exist', () => {
       mockExistsSync.mockReturnValue(false);
 
       const result = readJsonFile('path');
@@ -52,6 +52,14 @@ describe('write-read-json', () => {
       expect(mockExistsSync).toHaveBeenCalledWith('/mock/path/to/paths.json');
       expect(mockReadFileSync).not.toHaveBeenCalled();
       expect(result).toEqual([]);
+    });
+
+    it('should return default ide config when ide file does not exist', () => {
+      mockExistsSync.mockReturnValue(false);
+
+      const result = readJsonFile('ide');
+
+      expect(result).toEqual({ command: 'code .' });
     });
 
     it('should handle empty JSON file', () => {

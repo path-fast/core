@@ -10,6 +10,9 @@ export function readJsonFile(fileJson: 'path' | 'ide'): PathEntry[] | ideConfig 
   if (fs.existsSync(file)) {
     return JSON.parse(fs.readFileSync(file, "utf-8"));
   }
+  if (fileJson === 'ide') {
+    return { command: 'code .' };
+  }
   return [];
 }
 export function writeToJsonFile(fileJson: 'path', data: PathEntry[]): void;

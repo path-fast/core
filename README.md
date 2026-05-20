@@ -3,6 +3,7 @@
 
 ![npm version](https://img.shields.io/npm/v/path-fast)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+![CI Tests](https://github.com/path-fast/core/actions/workflows/tests.yml/badge.svg)
 
 **Path-Fast** is a CLI tool 🛠️ that simplifies project navigation by letting you save paths with a shortcut (alias/command), open them in your IDE, and optionally run extra commands. Perfect for jumping into projects and bootstrapping your environment fast.
 
@@ -34,14 +35,23 @@ npm install -g path-fast
 ### Commands Overview
 
 - `pf add <path> <command>`: Save a project path with a shortcut.
+  - `--ide <command>`: Custom IDE command (skips interactive prompts).
+  - `--extra <command>`: Additional command, repeatable.
+  - `--json`: Machine-readable output.
 - `pf go <command>`: Navigate to a saved path, open in your IDE, and run extras.
-   - Options:
-      - `-c, --code`: Skip opening the IDE command.
-      - `-e, --extra`: Skip executing additional commands.
-- `pf list`: Show all saved entries.
+  - `-c, --code`: Skip opening the IDE command.
+  - `-e, --extra`: Skip executing additional commands.
+  - `--dry-run`: Preview steps without changing directory or running commands.
+  - `--json`: Machine-readable output (works with `--dry-run`).
+- `pf list`: Show all saved entries (`--json` supported).
+- `pf export`: Export config bundle as JSON (`--json`, `-o <file>`).
+- `pf import <file>`: Import config after validation (`--json`).
+- `pf doctor`: Diagnose config and environment (`--json`).
 - `pf edit <command or index>`: Interactively edit a saved entry.
 - `pf delete <command>`: Delete an entry by its shortcut.
 - `pf set-ide`: Set a global default IDE command (e.g., `code .`).
+
+> `pf validate` is planned for v0.2. See [JSON output schema](docs/JSON-SCHEMA.md).
 
 ### Add a Path ➕
 
@@ -59,9 +69,10 @@ Examples:
 ```bash
 pf add /my-project app
 pf add . currentdir
+pf add . api --ide "cursor ." --extra "make up" --extra "npm run dev"
 ```
 
-During `pf add`, you can:
+During `pf add` (without flags), you can:
 - Add a custom IDE command for this specific path (e.g., `cursor .`, `idea .`, `cursor .`).
 - Add one or more additional commands that will run when using `pf go <command>`.
 
@@ -82,6 +93,11 @@ Examples:
 pf go app
 pf go app --extra     # don’t run additionals
 pf go app --code      # don’t open IDE
+pf go app --dry-run   # preview only
+pf list --json
+pf doctor
+pf export -o backup.json
+pf import backup.json
 ```
 
 ### List All Saved Paths 📜
