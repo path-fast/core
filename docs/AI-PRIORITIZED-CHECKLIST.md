@@ -10,12 +10,12 @@ Este plano foi alinhado com as issues abertas no GitHub. Quando houver conflito 
 
 ## MVP (impacto imediato)
 
-- [ ] `#29` feat: non-interactive add flags
-- [ ] `#30` feat: dry-run mode for go
-- [ ] `#31` feat: import/export config
-- [ ] `#32` feat: json output mode
-- [ ] `#33` feat: doctor diagnostics command
-- [ ] `#34` chore: ci + tests baseline
+- [x] `#29` feat: non-interactive add flags
+- [x] `#30` feat: dry-run mode for go
+- [x] `#31` feat: import/export config
+- [x] `#32` feat: json output mode
+- [x] `#33` feat: doctor diagnostics command
+- [x] `#34` chore: ci + tests baseline
 
 ## v0.2 (adoção por power users e IA)
 

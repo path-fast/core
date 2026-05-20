@@ -1,43 +1,49 @@
-
 import { exec, spawn } from 'child_process';
-import { readJsonFile } from '../utils/write-read-json.js';
 import { detectCommandType, buildShellCommand } from '../utils/command-detector.js';
-import type { CommandInfo, Options, OptionStep } from '../@types/index.js';
+import { printJson, printJsonError, successEnvelope, exitWithCode } from '../utils/output.js';
+import { buildGoPlan, printGoPlanHuman } from './go-plan.js';
+import type { CommandInfo, GoPlan, Options, OptionStep } from '../@types/index.js';
 
-export function goPath(command: string, option: Options): void {
-  const data = readJsonFile('path')
-  const entry = data.find(item => item.command === command);
+export async function goPath(command: string, option: Options = {}): Promise<void> {
+  const plan = buildGoPlan(command, option);
 
-  if (!entry) {
+  if (!plan) {
+    if (option.json) {
+      printJsonError(`No path found for command "${command}"`, 'command');
+      exitWithCode(1);
+    }
     console.error(`No path found for command "${command}"`);
+    process.exit(1);
+  }
+
+  if (option.dryRun) {
+    if (option.json) {
+      printJson(successEnvelope({ plan }));
+      return;
+    }
+    printGoPlanHuman(plan);
     return;
   }
 
-  const { path: targetPath, ideCommand } = entry;
-  
-  console.log(`Navigating to: ${targetPath}`);
-  process.chdir(targetPath);
-
-  const { command: ideCommandConfig } = readJsonFile('ide');
-
-  const ideRunner = ideCommand || ideCommandConfig || 'code .';
+  console.log(`Navigating to: ${plan.targetPath}`);
+  process.chdir(plan.targetPath);
 
   const optionSteps: OptionStep[] = [
     {
       shouldRun: () => !option.code,
-      execute: () => runIdeCommand(ideRunner, targetPath),
+      execute: () => runIdeCommand(plan.ideCommand, plan.targetPath),
       skipMessage: 'Skipped the "code ." command',
-      errorMessage: 'Error opening IDE command:'
+      errorMessage: 'Error opening IDE command:',
     },
     {
-      shouldRun: () => !option.extra && entry.additional.length > 0,
-      execute: () => runAdditionalCommands(entry.additional, targetPath),
+      shouldRun: () => !option.extra && plan.additional.length > 0,
+      execute: () => runAdditionalCommands(plan.additional, plan.targetPath),
       skipMessage: 'Skipped the additional commands',
-      errorMessage: 'Error executing additional commands:'
-    }
+      errorMessage: 'Error executing additional commands:',
+    },
   ];
 
-  runOptionStepsSequentially(optionSteps);
+  await runOptionStepsSequentially(optionSteps);
 }
 
 async function runOptionStepsSequentially(steps: OptionStep[]): Promise<void> {
@@ -71,7 +77,7 @@ async function runIdeCommand(ideRunner: string, targetPath: string): Promise<voi
 
 async function runAdditionalCommands(additionals: string[], targetPath: string): Promise<void> {
   const commandInfos = additionals.map(cmd => detectCommandType(cmd));
-  
+
   console.log(`\n🚀 Executing ${commandInfos.length} commands in batch mode:`);
   additionals.forEach((cmd, i) => console.log(`   ${i + 1}. ${cmd}`));
   await executeBatchCommand(commandInfos, targetPath);
@@ -81,15 +87,14 @@ async function runAdditionalCommands(additionals: string[], targetPath: string):
 function executeBatchCommand(commandInfos: CommandInfo[], cwd: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const shellCommand = buildShellCommand(commandInfos);
-    
+
     console.log(`📦 Batching commands with shared shell context`,);
     const options = {
       cwd,
       shell: true,
       stdio: 'pipe'
-    } as any;
+    } as Parameters<typeof spawn>[2];
 
-    
     const childProcess = spawn(shellCommand, options);
 
     if (childProcess.stdout) {
