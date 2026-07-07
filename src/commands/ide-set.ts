@@ -1,6 +1,7 @@
 import { makePrompt } from "../utils/make-prompt.js";
 import { spawnPrompt } from "../utils/spawn-prompt.js";
 import { writeToJsonFile } from "../utils/write-read-json.js";
+import { posthog, distinctId, shutdownPosthog } from "../utils/posthog.js";
 
 export async function setIde(): Promise<void> {
 
@@ -14,7 +15,9 @@ export async function setIde(): Promise<void> {
     }
 
   const data = { command: ideCommand };
-  
+
   writeToJsonFile('ide', data);
 
+  posthog.capture({ distinctId, event: 'ide_configured' });
+  await shutdownPosthog();
 }

@@ -1,9 +1,10 @@
 import fs from 'fs';
 import { importConfig, parseBundleFile } from '../utils/config-bundle.js';
 import { printJson, printJsonError, successEnvelope, exitWithCode } from '../utils/output.js';
+import { posthog, distinctId, shutdownPosthog } from '../utils/posthog.js';
 import type { Options } from '../@types/index.js';
 
-export function importConfigCommand(file: string, options: Options = {}): void {
+export async function importConfigCommand(file: string, options: Options = {}): Promise<void> {
   if (!fs.existsSync(file)) {
     const message = `File not found: ${file}`;
     if (options.json) {
@@ -34,6 +35,13 @@ export function importConfigCommand(file: string, options: Options = {}): void {
   }
 
   importConfig(result.bundle);
+
+  posthog.capture({
+    distinctId,
+    event: 'config_imported',
+    properties: { paths_count: result.bundle.paths.length },
+  });
+  await shutdownPosthog();
 
   if (options.json) {
     printJson(successEnvelope({

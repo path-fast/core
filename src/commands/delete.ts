@@ -1,6 +1,7 @@
 import { readJsonFile, writeToJsonFile } from "../utils/write-read-json.js";
 import { makePrompt } from "../utils/make-prompt.js";
 import { spawnPrompt } from "../utils/spawn-prompt.js";
+import { posthog, distinctId, shutdownPosthog } from "../utils/posthog.js";
 
 export async function deletePath(command: string): Promise<void> {
   const data = readJsonFile('path');
@@ -22,6 +23,9 @@ export async function deletePath(command: string): Promise<void> {
 
     writeToJsonFile('path', data);
     console.log(`Successfully deleted the command "${command}".`);
+
+    posthog.capture({ distinctId, event: 'path_deleted' });
+    await shutdownPosthog();
   } else {
     console.log('Deletion canceled.');
   }

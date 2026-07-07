@@ -3,6 +3,7 @@ import { checkIfExistsInJson, validatePathExists } from "../utils/validations.js
 import { makePrompt } from "../utils/make-prompt.js";
 import { spawnPrompt } from "../utils/spawn-prompt.js";
 import { printJson, printJsonError, successEnvelope } from "../utils/output.js";
+import { posthog, distinctId, shutdownPosthog } from "../utils/posthog.js";
 import type { AddOptions } from "../@types/index.js";
 
 export async function addPath(
@@ -41,11 +42,29 @@ export async function addPath(
     data.push(entry);
     writeToJsonFile('path', data);
 
+    posthog.capture({
+      distinctId,
+      event: 'path_added',
+      properties: {
+        has_custom_ide: customIdeCommand !== null,
+        additional_commands_count: additionalParams.length,
+        non_interactive: isNonInteractive,
+      },
+    });
+    await shutdownPosthog();
+
     if (options.json) {
       printJson(successEnvelope({ entry }));
     }
   } catch (error) {
     if (error instanceof Error) {
+      posthog.captureException(error, distinctId);
+      posthog.capture({
+        distinctId,
+        event: 'path_add_failed',
+        properties: { error_message: error.message },
+      });
+      await shutdownPosthog();
       if (options.json) {
         printJsonError(error.message);
         process.exit(1);

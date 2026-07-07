@@ -2,12 +2,19 @@ import { exec, spawn } from 'child_process';
 import { detectCommandType, buildShellCommand } from '../utils/command-detector.js';
 import { printJson, printJsonError, successEnvelope, exitWithCode } from '../utils/output.js';
 import { buildGoPlan, printGoPlanHuman } from './go-plan.js';
+import { posthog, distinctId, shutdownPosthog } from '../utils/posthog.js';
 import type { CommandInfo, GoPlan, Options, OptionStep } from '../@types/index.js';
 
 export async function goPath(command: string, option: Options = {}): Promise<void> {
   const plan = buildGoPlan(command, option);
 
   if (!plan) {
+    posthog.capture({
+      distinctId,
+      event: 'path_navigation_failed',
+      properties: { command },
+    });
+    await shutdownPosthog();
     if (option.json) {
       printJsonError(`No path found for command "${command}"`, 'command');
       exitWithCode(1);
@@ -17,6 +24,17 @@ export async function goPath(command: string, option: Options = {}): Promise<voi
   }
 
   if (option.dryRun) {
+    posthog.capture({
+      distinctId,
+      event: 'path_navigated',
+      properties: {
+        dry_run: true,
+        ide_skipped: !!option.code,
+        extra_skipped: !!option.extra,
+        additional_commands_count: plan.additional.length,
+      },
+    });
+    await shutdownPosthog();
     if (option.json) {
       printJson(successEnvelope({ plan }));
       return;
@@ -44,6 +62,18 @@ export async function goPath(command: string, option: Options = {}): Promise<voi
   ];
 
   await runOptionStepsSequentially(optionSteps);
+
+  posthog.capture({
+    distinctId,
+    event: 'path_navigated',
+    properties: {
+      dry_run: false,
+      ide_skipped: !!option.code,
+      extra_skipped: !!option.extra,
+      additional_commands_count: plan.additional.length,
+    },
+  });
+  await shutdownPosthog();
 }
 
 async function runOptionStepsSequentially(steps: OptionStep[]): Promise<void> {

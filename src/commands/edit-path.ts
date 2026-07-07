@@ -2,6 +2,7 @@ import { readJsonFile, writeToJsonFile } from '../utils/write-read-json.js';
 import { makePrompt } from '../utils/make-prompt.js';
 import { spawnPrompt } from '../utils/spawn-prompt.js';
 import { validatePathExists } from '../utils/validations.js';
+import { posthog, distinctId, shutdownPosthog } from '../utils/posthog.js';
 import type { PathEntry, PromptType } from '../@types/index.js';
 
 const regex = / /
@@ -56,6 +57,8 @@ export async function editPath(input: string): Promise<void> {
       case 'Save & Exit': {
         writeToJsonFile('path', data);
         console.log('Changes saved successfully!');
+        posthog.capture({ distinctId, event: 'path_edited' });
+        await shutdownPosthog();
         editing = false;
         break;
       }

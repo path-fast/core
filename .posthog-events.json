@@ -1,0 +1,47 @@
+[
+  {
+    "event_name": "path_added",
+    "event_description": "User successfully adds a new project path shortcut.",
+    "file": "src/commands/add-path.ts"
+  },
+  {
+    "event_name": "path_add_failed",
+    "event_description": "User encounters an error while adding a project path shortcut.",
+    "file": "src/commands/add-path.ts"
+  },
+  {
+    "event_name": "path_navigated",
+    "event_description": "User successfully navigates to a registered project path.",
+    "file": "src/commands/go-path.ts"
+  },
+  {
+    "event_name": "path_navigation_failed",
+    "event_description": "User attempts to navigate to a path that does not exist in the registry.",
+    "file": "src/commands/go-path.ts"
+  },
+  {
+    "event_name": "path_deleted",
+    "event_description": "User successfully deletes a registered path shortcut.",
+    "file": "src/commands/delete.ts"
+  },
+  {
+    "event_name": "path_edited",
+    "event_description": "User saves edits to a registered path shortcut.",
+    "file": "src/commands/edit-path.ts"
+  },
+  {
+    "event_name": "config_exported",
+    "event_description": "User exports their path configuration to a file or stdout.",
+    "file": "src/commands/export-config.ts"
+  },
+  {
+    "event_name": "config_imported",
+    "event_description": "User successfully imports a configuration bundle from a file.",
+    "file": "src/commands/import-config.ts"
+  },
+  {
+    "event_name": "ide_configured",
+    "event_description": "User sets or updates their preferred global IDE command.",
+    "file": "src/commands/ide-set.ts"
+  }
+]
