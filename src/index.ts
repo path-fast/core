@@ -10,7 +10,6 @@ import { editPath } from './commands/edit-path.js';
 import { setIde } from './commands/ide-set.js';
 import { exportConfigCommand } from './commands/export-config.js';
 import { importConfigCommand } from './commands/import-config.js';
-import { doctorCommand } from './commands/doctor.js';
 
 const program = new Command();
 
@@ -75,11 +74,5 @@ program
   .description('Import config from a JSON file (validates before applying)')
   .option('--json', 'Machine-readable JSON output')
   .action(importConfigCommand);
-
-program
-  .command('doctor')
-  .description('Diagnose common configuration and environment issues')
-  .option('--json', 'Machine-readable JSON output')
-  .action(doctorCommand);
 
 program.parse(process.argv);
