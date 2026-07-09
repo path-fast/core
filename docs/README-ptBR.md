@@ -1,5 +1,5 @@
 # Path-Fast 🚀 
-#### Traduzido: [en](/docs/README.md)
+#### Traduzido: [en](/README.md)
 
 ![npm version](https://img.shields.io/npm/v/path-fast)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
@@ -12,9 +12,9 @@
 ## Funcionalidades ✨
 
 - **Salvar caminhos com aliases** 📌: Armazene rapidamente caminhos e associe-os a um alias personalizado.
-- **Navegar e abrir projetos** 📂➡️💻: Use atalhos para navegar até caminhos e abri-los no VS Code.
+- **Navegar e abrir projetos** 📂➡️💻: Use atalhos para navegar até caminhos e abri-los no seu IDE.
 - **Suporte para comandos adicionais** 🎛️: Execute comandos predefinidos ao navegar para um caminho.
-- **Edição interativa** ✍️: Modifique caminhos, comandos ou parâmetros adicionais por meio de uma interface simples e interativa.
+- **Configuração via flags** 🏷️: Configure IDE, extras, edições e exclusões por flags — sem prompts interativos.
 - **Instalação global** 🌐: Disponível de qualquer lugar no seu terminal.
 
 ---
@@ -34,7 +34,7 @@ npm install -g path-fast
 ### Visão Geral dos Comandos
 
 - `pf add <caminho> <comando>`: Salva um caminho com um atalho.
-  - `--ide <comando>`: IDE customizado (pula prompts).
+  - `--ide <comando>`: Comando de IDE da entrada.
   - `--extra <comando>`: Comando adicional, repetível.
   - `--json`: Saída JSON.
 - `pf go <comando>`: Navega até o caminho, abre no IDE e executa extras.
@@ -45,12 +45,14 @@ npm install -g path-fast
 - `pf list`: Lista entradas (`--json`).
 - `pf export`: Exporta config (`--json`, `-o <arquivo>`).
 - `pf import <arquivo>`: Importa após validação (`--json`).
-- `pf doctor`: Diagnóstico de config/ambiente (`--json`).
-- `pf edit <comando ou índice>`: Edita interativamente.
-- `pf delete <comando>`: Remove entrada.
-- `pf set-ide`: IDE global (ex.: `code .`).
-
-> `pf validate` está previsto para v0.2. Veja [JSON-SCHEMA.md](JSON-SCHEMA.md).
+- `pf edit <comando ou índice>`: Edita entrada via flags.
+  - `-p, --path <caminho>`: Novo diretório do projeto.
+  - `-c, --code <comando>`: Novo alias do atalho.
+  - `-i, --ide <comando>`: Novo comando de IDE da entrada.
+  - `-e, --extra <comandos>`: Substitui comandos adicionais (separados por vírgula; use `clear` para remover todos).
+- `pf delete <comando ou índice>`: Remove entrada (`-y, --yes` obrigatório para confirmar).
+- `pf set-ide`: Define IDE global padrão.
+  - `-i, --ide <comando>`: Comando do IDE (ex.: `code .`, `cursor .`).
 
 ### Adicionar um Caminho ➕
 
@@ -71,9 +73,10 @@ pf add . diretorioatual
 pf add . api --ide "cursor ." --extra "make up" --extra "npm run dev"
 ```
 
-Durante o `pf add` (sem flags), você pode:
-- Adicionar um comando de IDE personalizado para este caminho (ex.: `cursor .`, `idea .`, `cursor .`).
-- Adicionar um ou mais comandos adicionais para executar com `pf go <comando>`.
+Flags opcionais:
+
+- `--ide <comando>`: Comando de IDE para esta entrada (ex.: `cursor .`, `idea .`).
+- `--extra <comando>`: Comando adicional executado no `pf go` (repetível).
 
 ### Navegar para um Caminho 🏃‍♂️
 
@@ -94,7 +97,6 @@ pf go app --extra   # não executa extras
 pf go app --code    # não abre o IDE
 pf go app --dry-run # apenas simula
 pf list --json
-pf doctor
 pf export -o backup.json
 pf import backup.json
 ```
@@ -109,42 +111,59 @@ pf list
 
 ### Editar um Caminho Salvo ✍️
 
-Edite campos de uma entrada de forma interativa:
+Edite um ou mais campos via flags (pelo menos uma flag é obrigatória):
 
 ```bash
-pf edit <comando ou índice>
+pf edit <comando ou índice> [flags]
 ```
 
-- É possível editar: Caminho, Comando (alias), Comando de IDE, Comandos adicionais.
-- Use `pf list` para visualizar índices (mostrados na tabela) e editar por índice.
-- ⚠️ `exit` é reservado nos prompts e não pode ser usado como comando.
+| Flag | Campo |
+|------|-------|
+| `-p, --path <caminho>` | Diretório do projeto |
+| `-c, --code <comando>` | Alias do atalho |
+| `-i, --ide <comando>` | Comando de IDE da entrada |
+| `-e, --extra <comandos>` | Comandos adicionais (separados por vírgula; `clear` remove todos) |
+
+Exemplos:
+
+```bash
+pf edit api --path /novo/caminho/api
+pf edit api --ide "cursor ."
+pf edit api --extra "make up,npm run dev"
+pf edit api --extra clear
+pf list        # ver índices
+pf edit 0 -c novoalias
+```
 
 ### Deletar um Caminho ❌
 
-Remova uma entrada pelo seu atalho (comando):
+Remova uma entrada pelo atalho ou índice (`-y` obrigatório):
 
 ```bash
-pf delete <comando>
+pf delete <comando ou índice> -y
+```
+
+### Definir IDE Global 💻
+
+```bash
+pf set-ide --ide "code ."
+pf set-ide -i "cursor ."
 ```
 
 ---
 
 ## Exemplos 🛠️
 
-1) Salvar projeto e adicionar extras interativamente:
+1) Salvar projeto com IDE e extras:
 
 ```bash
-pf add /srv/api api
-# Responda aos prompts para adicionar comando de IDE (opcional)
-# e comandos adicionais (ex.: "pnpm install", "pnpm dev").
+pf add /srv/api api --ide "cursor ." --extra "pnpm install, pnpm dev"
 ```
 
 2) IDE global (usado quando a entrada não tem um próprio):
 
 ```bash
-pf set-ide
-# Quando solicitado, informe algo como: code .
-# Outros exemplos: cursor . | idea . | subl .
+pf set-ide --ide "code ."
 ```
 
 3) Abrir projeto e executar extras:
@@ -155,18 +174,18 @@ pf go api --extra   # pular extras
 pf go api --code    # pular IDE
 ```
 
-4) Editar campos:
+4) Editar campos via flags:
 
 ```bash
-pf edit api
-pf list   # ver índices
-pf edit 0 # editar por índice
+pf edit api --path /srv/api-v2
+pf edit api --extra "docker compose up -d, npm run dev"
+pf edit 0 -c api2   # editar por índice do pf list
 ```
 
 5) Remover uma entrada:
 
 ```bash
-pf delete api
+pf delete api -y
 ```
 
 ---
@@ -180,8 +199,8 @@ Arquivos no diretório home:
 
 Precedência do comando de IDE ao executar `pf go <comando>`:
 
-1. Comando de IDE da entrada (definido no `pf add` ou `pf edit`).
-2. Comando de IDE global (`pf set-ide`).
+1. Comando de IDE da entrada (definido com `pf add --ide` ou `pf edit --ide`).
+2. Comando de IDE global (`pf set-ide --ide`).
 3. Padrão `code .`.
 
 ---

@@ -15,7 +15,7 @@
 - **Save paths with aliases** 📌: Quickly store paths and associate them with a custom alias.
 - **Navigate and open projects** 📂➡️💻: Use shortcuts to navigate to paths and open them in your IDE.
 - **Support for additional commands** 🎛️: Execute predefined commands when navigating to a path.
-- **Interactive editing** ✍️: Modify paths, commands, or additional parameters through a simple interactive interface.
+- **Flag-based configuration** 🏷️: Configure IDE, extras, edits, and deletions via CLI flags — no interactive prompts.
 - **Global installation** 🌐: Available from anywhere in your terminal.
 
 ---
@@ -35,7 +35,7 @@ npm install -g path-fast
 ### Commands Overview
 
 - `pf add <path> <command>`: Save a project path with a shortcut.
-  - `--ide <command>`: Custom IDE command (skips interactive prompts).
+  - `--ide <command>`: Per-entry IDE command.
   - `--extra <command>`: Additional command, repeatable.
   - `--json`: Machine-readable output.
 - `pf go <command>`: Navigate to a saved path, open in your IDE, and run extras.
@@ -46,12 +46,14 @@ npm install -g path-fast
 - `pf list`: Show all saved entries (`--json` supported).
 - `pf export`: Export config bundle as JSON (`--json`, `-o <file>`).
 - `pf import <file>`: Import config after validation (`--json`).
-- `pf doctor`: Diagnose config and environment (`--json`).
-- `pf edit <command or index>`: Interactively edit a saved entry.
-- `pf delete <command>`: Delete an entry by its shortcut.
-- `pf set-ide`: Set a global default IDE command (e.g., `code .`).
-
-> `pf validate` is planned for v0.2. See [JSON output schema](docs/JSON-SCHEMA.md).
+- `pf edit <command or index>`: Edit a saved entry via flags.
+  - `-p, --path <path>`: New project directory.
+  - `-c, --code <command>`: New shortcut alias.
+  - `-i, --ide <command>`: New per-entry IDE command.
+  - `-e, --extra <commands>`: Replace additional commands (comma-separated; use `clear` to remove all).
+- `pf delete <command or index>`: Delete an entry (`-y, --yes` required to confirm).
+- `pf set-ide`: Set a global default IDE command.
+  - `-i, --ide <command>`: IDE command (e.g., `code .`, `cursor .`).
 
 ### Add a Path ➕
 
@@ -72,9 +74,10 @@ pf add . currentdir
 pf add . api --ide "cursor ." --extra "make up" --extra "npm run dev"
 ```
 
-During `pf add` (without flags), you can:
-- Add a custom IDE command for this specific path (e.g., `cursor .`, `idea .`, `cursor .`).
-- Add one or more additional commands that will run when using `pf go <command>`.
+Optional flags:
+
+- `--ide <command>`: Per-entry IDE command (e.g., `cursor .`, `idea .`).
+- `--extra <command>`: Additional command to run on `pf go` (repeatable).
 
 ### Navigate to a Path 🏃‍♂️
 
@@ -95,7 +98,6 @@ pf go app --extra     # don’t run additionals
 pf go app --code      # don’t open IDE
 pf go app --dry-run   # preview only
 pf list --json
-pf doctor
 pf export -o backup.json
 pf import backup.json
 ```
@@ -110,41 +112,59 @@ pf list
 
 ### Edit a Saved Path ✍️
 
-Interactively edit fields for an entry:
+Edit one or more fields using flags (at least one flag is required):
 
 ```bash
-pf edit <command or index>
+pf edit <command or index> [flags]
 ```
 
-- Supports editing: Path, Command (alias), IDE Command, Additional commands.
-- Use `pf list` first if you prefer editing by index (shown in the table output).
-- ⚠️ `exit` is reserved in prompts and cannot be used as a command.
-### Delete a Path ❌
+| Flag | Field |
+|------|-------|
+| `-p, --path <path>` | Project directory |
+| `-c, --code <command>` | Shortcut alias |
+| `-i, --ide <command>` | Per-entry IDE command |
+| `-e, --extra <commands>` | Additional commands (comma-separated; `clear` removes all) |
 
-Delete a saved entry by its shortcut (command):
+Examples:
 
 ```bash
-pf delete <command>
+pf edit api --path /new/location/api
+pf edit api --ide "cursor ."
+pf edit api --extra "make up,npm run dev"
+pf edit api --extra clear
+pf list        # see index numbers
+pf edit 0 -c newalias
+```
+
+### Delete a Path ❌
+
+Delete a saved entry by shortcut or index (`-y` required):
+
+```bash
+pf delete <command or index> -y
+```
+
+### Set Global IDE 💻
+
+```bash
+pf set-ide --ide "code ."
+pf set-ide -i "cursor ."
 ```
 
 ---
 
 ## Examples 🛠️
 
-1) Save a project and add extras interactively:
+1) Save a project with IDE and extras:
 
 ```bash
-pf add /srv/api api
-# Answer prompts to add IDE command for this path (optional)
-# and additional commands (e.g., "pnpm install", "pnpm dev").
+pf add /srv/api api --ide "cursor ." --extra "pnpm install, pnpm dev"
 ```
 
 2) Global IDE setting (used when an entry doesn’t have its own):
 
 ```bash
-pf set-ide
-# When prompted, enter something like: code .
-# Other examples: cursor . | idea . | subl .
+pf set-ide --ide "code ."
 ```
 
 3) Open the project and run extras:
@@ -155,18 +175,18 @@ pf go api --extra   # skip extras
 pf go api --code    # skip opening IDE
 ```
 
-4) Edit fields interactively:
+4) Edit fields via flags:
 
 ```bash
-pf edit api
-pf list   # see index numbers
-pf edit 0 # edit by index
+pf edit api --path /srv/api-v2
+pf edit api --extra "docker compose up -d,npm run dev"
+pf edit 0 -c api2   # edit by index from pf list
 ```
 
 5) Remove an entry:
 
 ```bash
-pf delete api
+pf delete api -y
 ```
 
 ---
@@ -180,8 +200,8 @@ Files are stored in your home directory:
 
 IDE command precedence when running `pf go <command>`:
 
-1. Per-entry IDE command (set during `pf add` or via `pf edit`).
-2. Global IDE command (`pf set-ide`).
+1. Per-entry IDE command (set via `pf add --ide` or `pf edit --ide`).
+2. Global IDE command (`pf set-ide --ide`).
 3. Fallback `code .`.
 
 ---
