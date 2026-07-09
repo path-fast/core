@@ -17,7 +17,7 @@ export interface EditOptions {
   extra?: string
 }
 
-export interface Options {
+export interface GoOptions {
   code?: boolean;
   extra?: boolean;
   dryRun?: boolean;
@@ -52,35 +52,12 @@ export interface GoPlan {
   };
 }
 
-export type DoctorStatus = 'ok' | 'warn' | 'error' | 'info';
-
-export interface DoctorCheck {
-  id: string;
-  status: DoctorStatus;
-  message: string;
-}
-
-export interface DoctorSummary {
-  ok: number;
-  warn: number;
-  error: number;
-  info: number;
-}
-
 export interface PathFastConfigBundle {
   schemaVersion: 1;
   paths: PathEntry[];
   ide: ideConfig;
 }
 
-export type EnumTypes = "select" | "input" | "confirm" | "list";
-
-export interface PromptType {
-  type: EnumTypes;
-  name: string;
-  message: string;
-  [x: string]: string | boolean | string[] | [];
-}
 
 export interface CommandInfo {
   command: string;
