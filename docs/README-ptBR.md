@@ -202,5 +202,4 @@ Contribuições são bem-vindas! 🎉 Sinta-se à vontade para abrir uma issue �
 
 Obrigado aos desenvolvedores e mantenedores das seguintes bibliotecas:
 
-- [Inquirer](https://www.npmjs.com/package/inquirer) 💬
 - [Commander](https://www.npmjs.com/package/commander) 🛠️

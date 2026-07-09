@@ -42,11 +42,9 @@
     "vscode"
   ],
   "dependencies": {
-    "commander": "^13.1.0",
-    "inquirer": "^12.11.1"
+    "commander": "^13.1.0"
   },
   "devDependencies": {
-    "@types/inquirer": "^9.0.9",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.19.3",
     "jest": "^30.2.0",

@@ -203,7 +203,5 @@ Contributions are welcome! 🎉 Feel free to open an issue 🐛 or submit a pull
 
 Thanks to the developers and maintainers of the following libraries:
 
-
-- [Inquirer](https://www.npmjs.com/package/inquirer)💬
 - [commander](https://www.npmjs.com/package/commander)🛠️
 
