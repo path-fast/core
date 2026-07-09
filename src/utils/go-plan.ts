@@ -1,4 +1,4 @@
-import { readJsonFile } from '../utils/write-read-json.js';
+import { readJsonFile } from './write-read-json.js';
 import type { GoPlan, GoPlanStep, Options, PathEntry } from '../@types/index.js';
 
 const DEFAULT_IDE_COMMAND = 'code .';
