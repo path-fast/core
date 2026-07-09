@@ -17,10 +17,10 @@
     "build": "tsc && cp package.json dist/",
     "dev": "tsc --watch",
     "dev:pf": "node dist/index.js",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --ci --coverage",
-    "test:ci": "jest --ci --watchAll=false",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ci": "vitest run",
     "new:version": "npm version patch -m 'release: %s' && git push && git push --tags"
   },
   "repository": {
@@ -51,12 +51,10 @@
     "commander": "^13.1.0"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
     "@types/node": "^22.19.3",
-    "jest": "^30.2.0",
-    "ts-jest": "^29.4.6",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "@vitest/coverage-v8": "^3.2.4",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   },
   "packageManager": "pnpm@10.26.2"
 }
