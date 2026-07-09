@@ -49,6 +49,7 @@ program
 
 program
   .command('delete <command>')
+  .option('-y, --yes', 'Confirm deletion')
   .description('Delete a path by its command (shortcut)')
   .action(deletePath); 
 
@@ -59,7 +60,8 @@ program
 
 program
   .command('set-ide')
-  .description("Set your preferred IDE for opening projects ex: pf set-ide 'code .'")
+  .option('-i, --ide', 'IDE comand custom')
+  .description("Set your preferred IDE for opening projects ex: pf set-ide --ide='code .' or pf set-ide -i='cursor .'")
   .action(setIde);
 
 program

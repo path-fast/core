@@ -1,8 +1,8 @@
 import { readJsonFile, writeToJsonFile } from "../utils/write-read-json.js";
-import { makePrompt } from "../utils/make-prompt.js";
-import { spawnPrompt } from "../utils/spawn-prompt.js";
 
-export async function deletePath(command: string): Promise<void> {
+export async function deletePath(command: string, option: {
+  yes: boolean
+}): Promise<void> {
   const data = readJsonFile('path');
 
   const entryIndex = isNaN(Number(command)) ? data.findIndex(entry => entry.command === command) : Number(command) ;
@@ -12,17 +12,11 @@ export async function deletePath(command: string): Promise<void> {
     return;
   }
 
-
-  const promptConfirmation = makePrompt('confirm', 'confirmDelete', `Are you sure you want to delete the command "${command}"?`)
-  promptConfirmation.default = false
-  const confirmation = await spawnPrompt(promptConfirmation);
-
-  if (confirmation.confirmDelete) {
+  if (option.yes) {
     data.splice(entryIndex, 1);
-
     writeToJsonFile('path', data);
     console.log(`Successfully deleted the command "${command}".`);
   } else {
-    console.log('Deletion canceled.');
+    console.log('Deletion canceled. Add -y or --yes to confirm.');
   }
 }
