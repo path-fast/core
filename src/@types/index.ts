@@ -10,6 +10,13 @@ export interface PathEntry {
   ideCommand: string | null;
 }
 
+export interface EditOptions {
+  path?: string
+  ide?: string
+  code?: string
+  extra?: string
+}
+
 export interface Options {
   code?: boolean;
   extra?: boolean;

@@ -54,7 +54,11 @@ program
   .action(deletePath); 
 
 program
-  .command('edit <command>')
+  .command('edit <input>')
+  .option('-c, --code <input>', 'new comanda alias')
+  .option('-e, --extra <input>', 'comandos extras a serem rodados')
+  .option('-i, --ide <input>', 'ide custom command')
+  .option('-p, --path <input>', 'diretorio do projeto')
   .description('Edit your shortcut')
   .action(editPath); 
 

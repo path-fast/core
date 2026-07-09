@@ -1,15 +1,20 @@
 import { readJsonFile, writeToJsonFile } from '../utils/write-read-json.js';
-import { makePrompt } from '../utils/make-prompt.js';
-import { spawnPrompt } from '../utils/spawn-prompt.js';
 import { validatePathExists } from '../utils/validations.js';
-import type { PathEntry, PromptType } from '../@types/index.js';
+import type { EditOptions, PathEntry, PromptType } from '../@types/index.js';
 
 const regex = / /
 
 type EditItem = 'path' | 'command' | 'ideCommand';
 
-export async function editPath(input: string): Promise<void> {
+export async function editPath(input:string,  options: EditOptions): Promise<void> {
   const data = readJsonFile('path');
+  const { extra, code, ide, path  } = options
+
+  console.log(options)
+  if(!extra && !code && !ide && !path ) {
+    console.warn("Alerta nenhum campo alterado")
+    return
+  }
 
   const targetEditing = catchTarget(input, data)
 
@@ -18,55 +23,13 @@ export async function editPath(input: string): Promise<void> {
     return;
   }
 
-  let editing = true;
-  const promptEdit = makePrompt('list', 'action', 'What would you like to edit?')
-  promptEdit.choices = ['Path', 'Command', 'IDE Command', 'Additional', 'Save & Exit', 'Cancel']
+  if (options.path) await execEditCommun('path', options.path, targetEditing, callBackPath())
+  if (options.code) await execEditCommun('command', options.code, targetEditing)
+  if (options.ide) await execEditCommun('ideCommand', options.ide, targetEditing)
+  if (options.extra) await execEditAdditional(options.extra, targetEditing)
 
-  const makeText = (name: string, context: string) => `Current ${name}: ${context}\nEnter new path (Type "exit" or leave blank to exit without editing.):`
+  writeToJsonFile('path', data);
 
-  while (editing) {
-    const { action } = await spawnPrompt(promptEdit);
-
-    switch (action) {
-      case 'Path': {
-        const promptPath = makePrompt('input', 'edited', makeText('Path', targetEditing.path))
-        await execEditCommun('path', promptPath, targetEditing, callBackPath())
-        break;
-      }
-
-      case 'Command': {
-        const promptCommand = makePrompt('input', 'edited', makeText('Command', targetEditing.command))
-        await execEditCommun('command', promptCommand, targetEditing)
-        break;
-      }
-
-      case 'IDE Command': {
-        const ideCommand = makePrompt('input', 'edited', makeText('IDE Command', targetEditing.ideCommand || ''))
-        await execEditCommun('ideCommand', ideCommand, targetEditing)
-        break;
-      }
-
-      case 'Additional': {
-        console.log(`Current Additional Commands: ${targetEditing.additional.join(', ')}`);
-        const promptAdditional = makePrompt('input', 'newAdditional', 'Enter additional commands (comma-separated, type "exit" or leave blank to exit without editing, or type "clear" to clear): ')
-        await execEditAdditional(promptAdditional, targetEditing)
-        break;
-      }
-
-      case 'Save & Exit': {
-        writeToJsonFile('path', data);
-        console.log('Changes saved successfully!');
-        editing = false;
-        break;
-      }
-
-      case 'Cancel': {
-        console.log('Edit canceled.');
-        editing = false;
-        break;
-      }
-    }
-  }
 }
 
 function catchTarget(input: string, data: PathEntry[]) {
@@ -91,35 +54,29 @@ function callBackPath(): (edited: string) => string | false {
   }
 }
 
-async function execEditCommun(item: EditItem, pronpt: PromptType, target: PathEntry, callBack?: (edited: string) => string | false) {
-
-  const { edited } = await spawnPrompt(pronpt);
-
-  if (typeof edited == 'string') {
-    const pathAfter = edited.replace(regex, '')
+async function execEditCommun(item: EditItem, value: string | undefined, target: PathEntry, callBack?: (edited: string) => string | false) {
+  if (typeof value == 'string') {
+    const pathAfter = value.replace(regex, '')
     if (pathAfter === '' || pathAfter === 'exit') return
 
-    const callBackResult = callBack ? callBack(edited) : true;
+    const callBackResult = callBack ? callBack(value) : true;
 
-    if (edited && typeof callBackResult === 'string') target[item] = callBackResult;
+    if (value && typeof callBackResult === 'string') target[item] = callBackResult;
 
-    if (edited && !callBack && callBackResult) target[item] = edited;
+    if (value && !callBack && callBackResult) target[item] = value;
   }
 }
 
-async function execEditAdditional(pronpt: PromptType, target: PathEntry) {
-
-  const { newAdditional } = await spawnPrompt(pronpt);
-
-  if (typeof newAdditional == 'string' && newAdditional) {
-    const additionalAfter = newAdditional.replace(regex, '')
+async function execEditAdditional(value: string | undefined, target: PathEntry) {
+  if (typeof value == 'string' && value) {
+    const additionalAfter = value.replace(regex, '')
     if (additionalAfter === '' || additionalAfter === 'exit') return
 
-    if (newAdditional === 'clear') {
+    if (value === 'clear') {
       target.additional = [];
       return;
     }
 
-    target.additional = newAdditional.split(',').map((cmd: string) => cmd.trim());
+    target.additional = value.split(',').map((cmd: string) => cmd.trim());
   }
 }
