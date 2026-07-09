@@ -1,6 +1,6 @@
 import fs from "fs";
 import { filePath, fileIde } from "./json-path.js";
-import type { ideConfig, PathEntry } from "../types/index.js";
+import type { ideConfig, PathEntry } from "#types/index.js";
 
 export function readJsonFile(fileJson: 'ide'): ideConfig 
 export function readJsonFile(fileJson: 'path'): PathEntry[] 

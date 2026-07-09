@@ -1,6 +1,6 @@
-import { readJsonFile, writeToJsonFile } from '../utils/write-read-json.js';
-import { validatePathExists } from '../utils/validations.js';
-import type { EditOptions, PathEntry } from '../types/index.js';
+import { readJsonFile, writeToJsonFile } from '#utils/write-read-json.js';
+import { validatePathExists } from '#utils/validations.js';
+import type { EditOptions, PathEntry } from '#types/index.js';
 
 const regex = / /
 

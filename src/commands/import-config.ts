@@ -1,7 +1,7 @@
 import fs from 'fs';
-import { importConfig, parseBundleFile } from '../utils/config-bundle.js';
-import { printJson, printJsonError, successEnvelope, exitWithCode } from '../utils/output.js';
-import type { GoOptions } from '../types/index.js';
+import { importConfig, parseBundleFile } from '#utils/config-bundle.js';
+import { printJson, printJsonError, successEnvelope, exitWithCode } from '#utils/output.js';
+import type { GoOptions } from '#types/index.js';
 
 export function importConfigCommand(file: string, options: GoOptions = {}): void {
   if (!fs.existsSync(file)) {

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { filePath, fileIde } from './json-path.js';
 import { readJsonFile, writeToJsonFile } from './write-read-json.js';
-import type { ideConfig, PathEntry, PathFastConfigBundle } from '../types/index.js';
+import type { ideConfig, PathEntry, PathFastConfigBundle } from '#types/index.js';
 
 export interface ValidationError {
   field: string;

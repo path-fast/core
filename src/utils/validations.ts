@@ -1,6 +1,6 @@
 import { existsSync } from "fs";
 import { homedir } from "os";
-import type { PathEntry } from "../types/index.js";
+import type { PathEntry } from "#types/index.js";
 import { cwd } from "process";
 
 

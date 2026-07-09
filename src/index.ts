@@ -2,14 +2,14 @@
 
 import { Command } from 'commander';
 import pkg from '../package.json' with { type: 'json' };
-import { addPath } from './commands/add-path.js';
-import { goPath } from './commands/go-path.js';
-import { listPaths } from './commands/list-paths.js';
-import { deletePath } from './commands/delete.js';
-import { editPath } from './commands/edit-path.js';
-import { setIde } from './commands/ide-set.js';
-import { exportConfigCommand } from './commands/export-config.js';
-import { importConfigCommand } from './commands/import-config.js';
+import { addPath } from '@/commands/add-path.js';
+import { listPaths } from '@/commands/list-paths.js';
+import { deletePath } from '@/commands/delete.js';
+import { editPath } from '@/commands/edit-path.js';
+import { setIde } from '@/commands/ide-set.js';
+import { exportConfigCommand } from '@/commands/export-config.js';
+import { importConfigCommand } from '@/commands/import-config.js';
+import { goPath } from '@/commands/go-path.js';
 
 const program = new Command();
 

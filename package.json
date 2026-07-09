@@ -41,6 +41,12 @@
     "automation",
     "vscode"
   ],
+  "imports": {
+    "#types/*": "./dist/types/*",
+    "#utils/*": "./dist/utils/*",
+    "#commands": "./dist/commands/*",
+    "#app/*": "./dist/*"
+  },
   "dependencies": {
     "commander": "^13.1.0"
   },
