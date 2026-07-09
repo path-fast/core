@@ -1,8 +1,8 @@
 import { readJsonFile } from '../utils/write-read-json.js';
 import { printJson, successEnvelope } from '../utils/output.js';
-import type { Options } from '../@types/index.js';
+import type { GoOptions } from '../types/index.js';
 
-export function listPaths(options: Options = {}): void {
+export function listPaths(options: GoOptions = {}): void {
   const data = readJsonFile('path');
 
   if (data.length === 0) {

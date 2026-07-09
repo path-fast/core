@@ -1,7 +1,7 @@
 import { readJsonFile, writeToJsonFile } from "../utils/write-read-json.js";
 import { checkIfExistsInJson, validatePathExists } from "../utils/validations.js";
 import { printJson, printJsonError, successEnvelope } from "../utils/output.js";
-import type { AddOptions } from "../@types/index.js";
+import type { AddOptions } from "../types/index.js";
 
 export async function addPath(
   projectPath: string,

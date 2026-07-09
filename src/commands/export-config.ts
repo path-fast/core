@@ -1,9 +1,9 @@
 import fs from 'fs';
 import { exportConfig, formatBundleForStdout, writeBundleToFile } from '../utils/config-bundle.js';
 import { printJson, successEnvelope } from '../utils/output.js';
-import type { Options } from '../@types/index.js';
+import type { GoOptions } from '../types/index.js';
 
-export interface ExportOptions extends Options {
+export interface ExportOptions extends GoOptions {
   out?: string;
 }
 

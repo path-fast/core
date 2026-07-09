@@ -1,5 +1,5 @@
 import { readJsonFile } from './write-read-json.js';
-import type { GoPlan, GoPlanStep, Options, PathEntry } from '../@types/index.js';
+import type { GoPlan, GoPlanStep, GoOptions, PathEntry } from '../types/index.js';
 
 const DEFAULT_IDE_COMMAND = 'code .';
 
@@ -22,7 +22,7 @@ function readIdeConfig(): { command: string } {
   return { command: command?.trim() || DEFAULT_IDE_COMMAND };
 }
 
-export function buildGoPlan(command: string, options: Options): GoPlan | null {
+export function buildGoPlan(command: string, options: GoOptions): GoPlan | null {
   const entry = findPathEntry(command);
 
   if (!entry) {

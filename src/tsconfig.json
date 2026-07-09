@@ -6,14 +6,13 @@
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
-    "declaration": true,
-    "declarationDir": "dist",
     "typeRoots": ["./node_modules/@types"],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
     },
     "resolveJsonModule": true
   },
   "include": ["src/**/*", "package.json"],
   "exclude": ["node_modules", "dist"]
 }
+ 
