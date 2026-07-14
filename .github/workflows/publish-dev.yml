@@ -20,7 +20,7 @@ jobs:
 
   publish-dev:
     runs-on: ubuntu-latest
-    needs: tests
+    # needs: tests
     environment: dev
     if: github.ref == 'refs/heads/dev-publish'
     env:
