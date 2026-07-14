@@ -1,0 +1,48 @@
+name: Deploy Dev Package to NPM
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-dev-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - dev-publish
+  workflow_dispatch:
+
+jobs:
+  # tests:
+  #   uses: ./.github/workflows/tests.yml
+  #   secrets: inherit
+
+  publish-dev:
+    runs-on: ubuntu-latest
+    needs: tests
+    environment: dev
+    if: github.ref == 'refs/heads/dev-publish'
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project
+        uses: ./.github/actions/setup
+        with:
+          registry-url: https://registry.npmjs.org
+
+      - name: Set dev version
+        id: version
+        run: bash .github/scripts/npm-set-dev-version.sh "${{ github.run_number }}"
+
+      - name: Check if dev version already exists on NPM
+        id: check-version
+        run: bash .github/scripts/npm-version-exists.sh "${{ steps.version.outputs.pkg_name }}" "${{ steps.version.outputs.dev_version }}"
+
+      - name: Publish to NPM (dev tag)
+        if: steps.check-version.outputs.exists == 'false'
+        run: pnpm publish --access public --tag dev --no-git-checks
