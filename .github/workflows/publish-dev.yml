@@ -45,4 +45,5 @@ jobs:
 
       - name: Publish to NPM (dev tag)
         if: steps.check-version.outputs.exists == 'false'
+        working-directory: dist
         run: pnpm publish --access public --tag dev --no-git-checks

@@ -14,7 +14,8 @@
     "docs"
   ],
   "scripts": {
-    "build": "tsc && cp package.json dist/",
+    "build": "tsc && node .github/scripts/prepare-dist-package.mjs",
+    "prepare:dist": "node .github/scripts/prepare-dist-package.mjs",
     "dev": "tsc --watch",
     "dev:pf": "node dist/index.js",
     "test": "vitest run",
