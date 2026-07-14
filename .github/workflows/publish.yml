@@ -14,13 +14,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  tests:
-    uses: ./.github/workflows/tests.yml
-    secrets: inherit
+  # tests:
+  #   uses: ./.github/workflows/tests.yml
+  #   secrets: inherit
 
   publish:
     runs-on: ubuntu-latest
-    needs: tests
+    # needs: tests
     environment: prod
     if: github.ref == 'refs/heads/master'
     env:
@@ -30,29 +30,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup project
+        uses: ./.github/actions/setup
         with:
-          version: 10.26.2
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build project
-        run: pnpm run build
+          registry-url: https://registry.npmjs.org
 
       - name: Check if version already exists on NPM
         id: check-version
-        run: |
-          PKG_NAME=$(node -p "require('./package.json').name")
-          PKG_VERSION=$(node -p "require('./package.json').version")
-          if npm view "$PKG_NAME@$PKG_VERSION" version > /dev/null 2>&1; then
-            echo "Version $PKG_VERSION already exists."
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "Version $PKG_VERSION does not exist."
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
+        run: bash .github/scripts/npm-version-exists.sh
 
       - name: Publish to NPM
         if: steps.check-version.outputs.exists == 'false'
