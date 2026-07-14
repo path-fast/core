@@ -21,7 +21,7 @@ jobs:
   publish-dev:
     runs-on: ubuntu-latest
     # needs: tests
-    environment: dev
+    environment: prod
     if: github.ref == 'refs/heads/dev-publish'
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
