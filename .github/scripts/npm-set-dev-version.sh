@@ -7,10 +7,9 @@ set -euo pipefail
 #   npm-set-dev-version.sh <run-number>
 #
 # Example:
-#   npm-set-dev-version.sh 42   # 1.1.1 -> 1.1.1-dev.42
+#   npm-set-dev-version.sh 42   # 2.0.0 -> 2.0.0-dev.42
 #
-# Writes to GITHUB_OUTPUT:
-#   pkg_name, dev_version
+# Writes to GITHUB_OUTPUT: pkg_name, dev_version
 
 if [[ -z "${GITHUB_OUTPUT:-}" ]]; then
   echo "GITHUB_OUTPUT is not set" >&2
@@ -23,8 +22,8 @@ if [[ $# -ne 1 ]]; then
 fi
 
 RUN_NUMBER="$1"
-PKG_NAME="$(node -p "require('./package.json').name")"
-BASE="$(node -p "require('./package.json').version.replace(/-.*$/,'')")"
+PKG_NAME="$(jq -r '.name' package.json)"
+BASE="$(jq -r '.version' package.json | sed 's/-.*//')"
 DEV_VERSION="${BASE}-dev.${RUN_NUMBER}"
 
 {
@@ -33,4 +32,5 @@ DEV_VERSION="${BASE}-dev.${RUN_NUMBER}"
 } >> "$GITHUB_OUTPUT"
 
 npm version "$DEV_VERSION" --no-git-tag-version
+node .github/scripts/prepare-dist-package.mjs
 echo "Set dev version to $DEV_VERSION"

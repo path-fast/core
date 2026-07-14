@@ -37,11 +37,11 @@ jobs:
 
       - name: Set dev version
         id: version
-        run: node .github/scripts/npm-set-dev-version.mjs "${{ github.run_number }}"
+        run: bash .github/scripts/npm-set-dev-version.sh "${{ github.run_number }}"
 
       - name: Check if dev version already exists on NPM
         id: check-version
-        run: node .github/scripts/npm-version-exists.mjs "${{ steps.version.outputs.pkg_name }}" "${{ steps.version.outputs.dev_version }}"
+        run: bash .github/scripts/npm-version-exists.sh "${{ steps.version.outputs.pkg_name }}" "${{ steps.version.outputs.dev_version }}"
 
       - name: Publish to NPM (dev tag)
         if: steps.check-version.outputs.exists == 'false'

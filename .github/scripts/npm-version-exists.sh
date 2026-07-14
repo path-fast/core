@@ -4,12 +4,11 @@ set -euo pipefail
 # Check if a package version already exists on npm.
 #
 # Usage:
-#   npm-version-exists.sh                         # name + version from package.json
-#   npm-version-exists.sh <version>               # name from package.json
+#   npm-version-exists.sh
+#   npm-version-exists.sh <version>
 #   npm-version-exists.sh <package-name> <version>
 #
-# Writes to GITHUB_OUTPUT:
-#   pkg_name, pkg_version, exists (true|false)
+# Writes to GITHUB_OUTPUT: pkg_name, pkg_version, exists
 
 if [[ -z "${GITHUB_OUTPUT:-}" ]]; then
   echo "GITHUB_OUTPUT is not set" >&2
