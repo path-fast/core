@@ -37,8 +37,12 @@ jobs:
 
       - name: Check if version already exists on NPM
         id: check-version
-        run: bash .github/scripts/npm-version-exists.sh
+        run: node .github/scripts/npm-version-exists.mjs
+
+      - name: Prepare dist package for publish
+        run: node .github/scripts/prepare-dist-package.mjs
 
       - name: Publish to NPM
         if: steps.check-version.outputs.exists == 'false'
-        run: pnpm publish --access public
+        working-directory: dist
+        run: pnpm publish --access public --no-git-checks
