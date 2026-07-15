@@ -1,6 +1,6 @@
-import { readJsonFile } from '#utils/write-read-json.js';
-import { printJson, successEnvelope } from '#utils/output.js';
-import type { GoOptions } from '#types/index.js';
+import { readJsonFile } from '../utils/write-read-json.js';
+import { printJson, successEnvelope } from '../utils/output.js';
+import type { GoOptions } from '../types/index.js';
 
 export function listPaths(options: GoOptions = {}): void {
   const data = readJsonFile('path');

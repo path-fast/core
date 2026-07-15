@@ -1,4 +1,4 @@
-import { readJsonFile, writeToJsonFile } from "#utils/write-read-json.js";
+import { readJsonFile, writeToJsonFile } from "../utils/write-read-json.js";
 
 export async function deletePath(command: string, option: {
   yes: boolean

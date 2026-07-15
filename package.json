@@ -14,8 +14,7 @@
     "docs"
   ],
   "scripts": {
-    "build": "tsc && node .github/scripts/prepare-dist-package.mjs",
-    "prepare:dist": "node .github/scripts/prepare-dist-package.mjs",
+    "build": "tsc",
     "dev": "tsc --watch",
     "dev:pf": "node dist/index.js",
     "test": "vitest run",
@@ -42,12 +41,6 @@
     "automation",
     "vscode"
   ],
-  "imports": {
-    "#types/*": "./dist/types/*",
-    "#utils/*": "./dist/utils/*",
-    "#commands": "./dist/commands/*",
-    "#app/*": "./dist/*"
-  },
   "dependencies": {
     "commander": "^13.1.0"
   },

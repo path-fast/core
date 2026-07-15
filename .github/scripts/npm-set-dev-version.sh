@@ -32,5 +32,4 @@ DEV_VERSION="${BASE}-dev.${RUN_NUMBER}"
 } >> "$GITHUB_OUTPUT"
 
 npm version "$DEV_VERSION" --no-git-tag-version
-node .github/scripts/prepare-dist-package.mjs
 echo "Set dev version to $DEV_VERSION"

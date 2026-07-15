@@ -5,15 +5,6 @@ import { defineConfig } from 'vitest/config';
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  resolve: {
-    alias: [
-      { find: /^#types\/(.+)\.js$/, replacement: path.resolve(rootDir, 'src/types/$1.ts') },
-      { find: /^#utils\/(.+)\.js$/, replacement: path.resolve(rootDir, 'src/utils/$1.ts') },
-      { find: /^#commands\/(.+)\.js$/, replacement: path.resolve(rootDir, 'src/commands/$1.ts') },
-      { find: /^#app\/(.+)\.js$/, replacement: path.resolve(rootDir, 'src/$1.ts') },
-      { find: /^(\.{1,2}\/.*)\.js$/, replacement: '$1' },
-    ],
-  },
   test: {
     environment: 'node',
     include: ['tests/**/*.spec.ts', 'tests/**/*.test.ts'],
