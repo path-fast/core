@@ -1,8 +1,12 @@
-import { cpSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
-import pck from "../../package.json" with { type: "json"}
+import { cpSync, existsSync, writeFileSync } from 'node:fs';
+import pck from '../../package.json' with { type: 'json' };
 
 const distPackage = {
   ...pck,
+  main: 'index.js',
+  bin: { 
+    pf: 'index.js'
+  },
   imports: {
     '#types/*': './types/*',
     '#utils/*': './utils/*',
