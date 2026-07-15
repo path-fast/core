@@ -63,7 +63,7 @@ program
   .action(editPath); 
 
 program
-  .command('set-ide')
+  .command('set-ide <input>')
   .option('-i, --ide', 'IDE comand custom')
   .description("Set your preferred IDE for opening projects ex: pf set-ide --ide='code .' or pf set-ide -i='cursor .'")
   .action(setIde);

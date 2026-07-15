@@ -1,10 +1,10 @@
 import { writeToJsonFile } from "../utils/write-read-json.js";
 
-export async function setIde(option:{
+export async function setIde(input: string, option:{
   ide : string
 }): Promise<void> {
 
-    const ideCommand = option.ide.trim();
+    const ideCommand = input.trim();
 
     if (!ideCommand) {
       console.error('❌ IDE command cannot be empty.');

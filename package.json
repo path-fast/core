@@ -23,7 +23,7 @@
     "test:ci": "vitest run",
     "docker:build": "docker compose -f docker/compose.yml build",
     "docker:shell": "docker compose -f docker/compose.yml run --rm pf-e2e bash",
-    "docker:setup": "docker compose -f docker/compose.yml run --rm pf-e2e true"
+    "docker:down": "docker compose -f docker/compose.yml down"
   },
   "repository": {
     "type": "git",
