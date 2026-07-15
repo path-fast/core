@@ -1,4 +1,4 @@
-import  { type CommandInfo, CommandType } from "#types/index.js";
+import  { type CommandInfo, CommandType } from "../types/index.js";
 
 
 export function detectCommandType(command: string): CommandInfo {

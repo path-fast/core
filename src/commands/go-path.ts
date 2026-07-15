@@ -1,8 +1,8 @@
 import { exec, spawn } from 'child_process';
-import { detectCommandType, buildShellCommand } from '#utils/command-detector.js';
-import { printJson, printJsonError, successEnvelope, exitWithCode } from '#utils/output.js';
-import { buildGoPlan, printGoPlanHuman } from '#utils/go-plan.js';
-import type { CommandInfo, GoOptions, OptionStep } from '#types/index.js';
+import { detectCommandType, buildShellCommand } from '../utils/command-detector.js';
+import { printJson, printJsonError, successEnvelope, exitWithCode } from '../utils/output.js';
+import { buildGoPlan, printGoPlanHuman } from '../utils/go-plan.js';
+import type { CommandInfo, GoOptions, OptionStep } from '../types/index.js';
 
 export async function goPath(command: string, option: GoOptions = {}): Promise<void> {
   const plan = buildGoPlan(command, option);

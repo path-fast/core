@@ -1,4 +1,4 @@
-import { writeToJsonFile } from "#utils/write-read-json.js";
+import { writeToJsonFile } from "../utils/write-read-json.js";
 
 export async function setIde(option:{
   ide : string
