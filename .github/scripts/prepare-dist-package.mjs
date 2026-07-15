@@ -15,12 +15,6 @@ const distPackage = {
   },
 };
 
-delete distPackage.files;
-delete distPackage.devDependencies;
-delete distPackage.scripts;
-delete distPackage.packageManager;
-delete distPackage.private;
-
 writeFileSync('dist/package.json', `${JSON.stringify(distPackage, null, 2)}\n`);
 
 if (existsSync('README.md')) {
