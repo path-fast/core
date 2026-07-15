@@ -1,0 +1,19 @@
+services:
+  pf-e2e:
+    container_name: path-fast
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: path-fast-e2e
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    environment:
+      HOME: /home/pf-tester
+      CI: "true"
+      PNPM_HOME: /home/pf-tester/.local/share/pnpm
+      PNPM_STORE_DIR: /home/pf-tester/.local/share/pnpm/store
+      PATH: /home/pf-tester/.local/share/pnpm:/opt/pf-mocks/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    volumes:
+      - ..:/app
+      - /app/node_modules

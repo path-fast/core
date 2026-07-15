@@ -21,7 +21,9 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ci": "vitest run",
-    "new:version": "npm version patch -m 'release: %s' && git push && git push --tags"
+    "docker:build": "docker compose -f docker/compose.yml build",
+    "docker:shell": "docker compose -f docker/compose.yml run --rm pf-e2e bash",
+    "docker:setup": "docker compose -f docker/compose.yml run --rm pf-e2e true"
   },
   "repository": {
     "type": "git",

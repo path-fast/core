@@ -1,0 +1,7 @@
+{
+  "name": "fixture-beta",
+  "private": true,
+  "scripts": {
+    "dev": "echo beta dev"
+  }
+}

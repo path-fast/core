@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+echo "IDE opened: $*"
+exit 0
